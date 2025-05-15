@@ -17,7 +17,7 @@ export const register = async (req, res, next) => {
 
     // Input validation
     if (!username || !password || !email) {
-      throw new BadRequestError("Username and password are required");
+      throw new BadRequestError("Username, password and email are required");
     }
 
     // Check if user already exists
@@ -26,6 +26,11 @@ export const register = async (req, res, next) => {
       throw new ConflictError("Username already exists");
     }
 
+    // Check if email already exists
+    const existingEmail = await UserModel.findOne({ email });
+    if (existingEmail) {
+      throw new ConflictError("Email already exists");
+    }
     // Hash password using hashPassword from authUtils
     const hashedPassword = await hashPassword(password);
 
