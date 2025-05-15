@@ -1,4 +1,4 @@
-import ReviewModel from "../models/Review.js";
+import ReviewModel from "../models/ReviewSchema.js";
 
 // Get all reviews for a movie (Public)
 export const getMovieReviews = async (req, res) => {
@@ -25,7 +25,9 @@ export const createReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
     const movieId = req.params.movieId;
-    const userId = req.user.id; // need to have `req.user` from auth middleware
+    // const userId = req.user.id; // need to have `req.user` from auth middleware
+
+    const userId = req.user?.id || "68258a02ed49ee659574a8e0";
 
     // Check if review by user for movie exists
     const existing = await ReviewModel.findOne({
@@ -67,7 +69,9 @@ export const updateReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
     const { rating, comment } = req.body;
-    const userId = req.user.id;
+    // const userId = req.user.id;
+
+    const userId = req.user?.id || "68258a02ed49ee659574a8e0";
 
     const review = await ReviewModel.findById(reviewId);
     if (!review) return handleNotFound(res, "Review", reviewId);
@@ -101,7 +105,9 @@ export const updateReview = async (req, res) => {
 export const deleteReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
-    const userId = req.user.id;
+    // const userId = req.user.id;
+
+    const userId = req.user?.id || "68258a02ed49ee659574a8e0";
 
     const review = await ReviewModel.findById(reviewId);
     if (!review) return handleNotFound(res, "Review", reviewId);
@@ -113,14 +119,14 @@ export const deleteReview = async (req, res) => {
       });
     }
 
-    await review.remove();
+    await review.deleteOne();
 
     return res.status(200).json({
       status: "ok",
       msg: "Review deleted",
     });
   } catch (error) {
-    console.error(error.message);
+    console.error("DELETE error:", error);
     return res.status(500).json({
       status: "error",
       msg: "Error deleting review",

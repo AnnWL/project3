@@ -8,6 +8,7 @@ import actorRouter from "./src/routers/actorRouter.js";
 import movieRouter from "./src/routers/movieRouter.js";
 import userRouter from "./src/routers/userRouter.js";
 import seedRouter from "./src/routers/seedRouter.js";
+import reviewRouter from "./src/routers/reviewRouter.js";
 
 import {
   BadRequestError,
@@ -40,6 +41,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/seed", seedRouter);
 app.use("/api/users", userRouter);
 app.use("/api/movies", movieRouter);
+app.use("/api/review", reviewRouter);
 //app.use("/api/crew", crewRouter);
 app.use("/api/actors", actorRouter);
 
