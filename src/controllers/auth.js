@@ -13,10 +13,10 @@ import {
 
 export const register = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
+    const { username, password, email } = req.body;
 
     // Input validation
-    if (!username || !password) {
+    if (!username || !password || !email) {
       throw new BadRequestError("Username and password are required");
     }
 
@@ -32,6 +32,7 @@ export const register = async (req, res, next) => {
     // Create new user
     await UserModel.create({
       username,
+      email,
       password: hashedPassword,
     });
 
