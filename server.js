@@ -4,7 +4,7 @@ import express from "express";
 
 import authRouter from "./src/routers/authRouter.js";
 import actorRouter from "./src/routers/actorRouter.js";
-import crewRouter from "./src/routers/crewRouter.js";
+//import crewRouter from "./src/routers/crewRouter.js";
 import movieRouter from "./src/routers/movieRouter.js";
 import userRouter from "./src/routers/userRouter.js";
 import seedRouter from "./src/routers/seedRouter.js";
@@ -40,7 +40,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/seed", seedRouter);
 app.use("/api/users", userRouter);
 app.use("/api/movies", movieRouter);
-app.use("/api/crew", crewRouter);
+//app.use("/api/crew", crewRouter);
 app.use("/api/actors", actorRouter);
 
 app.use((err, req, res, next) => {

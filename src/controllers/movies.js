@@ -1,6 +1,6 @@
 import MovieModel from "../models/MovieSchema.js";
 import ActorModel from "../models/ActorSchema.js";
-import CrewModel from "../models/CrewSchema.js";
+//import CrewModel from "../models/CrewSchema.js";
 import {
   handleNotFound,
   handleValidationError,

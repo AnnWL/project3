@@ -1,5 +1,5 @@
 import express from "express";
-import { seedData } from "../controllers/seedData.js";
+import seedData from "../controllers/seedData.js";
 
 const router = express.Router();
 
