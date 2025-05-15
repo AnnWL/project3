@@ -13,7 +13,7 @@ import {
   BadRequestError,
   NotFoundError,
   ConflictError,
-} from "./src/utils/errorClass.js";
+} from "./src/utils/error.js";
 
 import connectDB from "./src/db/db.js";
 import cors from "cors";

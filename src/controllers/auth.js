@@ -1,4 +1,4 @@
-import UserModel from "../models/Users.js";
+import UserModel from "../models/UserSchema.js";
 import {
   hashPassword,
   comparePassword,

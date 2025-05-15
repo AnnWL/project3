@@ -1,4 +1,4 @@
-import CrewModel from "../models/CrewModel.js";
+import CrewModel from "../models/CrewSchema.js";
 import { getByIdOrThrow } from "../utils/db.js";
 import {
   handleResponse,

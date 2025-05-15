@@ -1,10 +1,10 @@
-import UserModel from "../models/UserModel.js";
+import UserModel from "../models/UserSchema.js";
 import {
   BadRequestError,
   NotFoundError,
   ConflictError,
 } from "../utils/error.js";
-import { getByIdOrThrow } from "../utils/dbUtils.js";
+import { getByIdOrThrow } from "../utils/db.js";
 
 const getUserById = (id) => getByIdOrThrow(UserModel, id);
 
@@ -52,6 +52,7 @@ export const promoteToAdmin = async (req, res, next) => {
   }
 };
 
+//registered users
 // Get profile of the logged-in user
 export const getProfile = async (req, res, next) => {
   try {
@@ -104,3 +105,5 @@ export const addToWatchList = async (req, res, next) => {
     next(error); // Pass the error to the global error handler
   }
 };
+
+//register user

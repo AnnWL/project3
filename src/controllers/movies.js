@@ -1,6 +1,6 @@
-import MovieModel from "../models/Movie.js";
-import ActorModel from "../models/Actor.js";
-import CrewModel from "../models/Crew.js";
+import MovieModel from "../models/MovieSchema.js";
+import ActorModel from "../models/ActorSchema.js";
+import CrewModel from "../models/CrewSchema.js";
 import {
   handleNotFound,
   handleValidationError,
@@ -10,6 +10,45 @@ import {
 // =========================
 // Public endpoints (no auth)
 // =========================
+
+// Search movies by keyword in title/description or by genre
+export const searchMovies = async (req, res) => {
+  try {
+    const { keyword, genre } = req.query;
+
+    const query = {};
+    if (keyword) {
+      query.$or = [
+        { title: { $regex: keyword, $options: "i" } },
+        { description: { $regex: keyword, $options: "i" } },
+      ];
+    }
+    if (genre) {
+      query.genre = { $regex: genre, $options: "i" };
+    }
+
+    if (!keyword && !genre) {
+      return handleValidationError(
+        res,
+        "Please provide 'keyword' or 'genre' for search"
+      );
+    }
+
+    const movies = await MovieModel.find(query);
+
+    return res.status(200).json({
+      status: "ok",
+      msg: "Movies retrieved",
+      movies,
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({
+      status: "error",
+      msg: "Error searching movies",
+    });
+  }
+};
 
 // Get all movies
 export const getAllMovies = async (req, res) => {
@@ -52,6 +91,37 @@ export const getMovieById = async (req, res) => {
   }
 };
 
+// =========================
+// Helper functions
+// =========================
+
+// Get movie cast or crew
+const getMovieEntity = async (req, res, populateField, responseKey) => {
+  try {
+    const movie = await MovieModel.findById(req.params.movieId).populate(
+      populateField
+    );
+    if (!movie) return handleNotFound(res, "Movie", req.params.movieId);
+
+    return res.status(200).json({
+      status: "ok",
+      msg: `${capitalize(responseKey)} for movie ${
+        req.params.movieId
+      } retrieved`,
+      [responseKey]: movie[populateField],
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(400).json({
+      status: "error",
+      msg: `Error getting ${responseKey} for movie ${req.params.movieId}`,
+    });
+  }
+};
+
+// Capitalize helper function
+const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+
 // Get movie cast (actors)
 export const getMovieCast = async (req, res) => {
   return getMovieEntity(req, res, "actors", "cast");
@@ -63,7 +133,7 @@ export const getMovieCrew = async (req, res) => {
 };
 
 // =========================
-// Registered User endpoints
+// Admin endpoints
 // =========================
 
 // Add an actor or crew to a movie
@@ -139,10 +209,6 @@ export const removeEntityFromMovie = async (req, res, entityType) => {
     });
   }
 };
-
-// =========================
-// Admin-only endpoints
-// =========================
 
 // Create a movie (Admin only)
 export const createMovie = async (req, res) => {
@@ -239,34 +305,3 @@ export const deleteMovie = async (req, res) => {
     });
   }
 };
-
-// =========================
-// Helper functions
-// =========================
-
-// Get movie cast or crew
-const getMovieEntity = async (req, res, populateField, responseKey) => {
-  try {
-    const movie = await MovieModel.findById(req.params.movieId).populate(
-      populateField
-    );
-    if (!movie) return handleNotFound(res, "Movie", req.params.movieId);
-
-    return res.status(200).json({
-      status: "ok",
-      msg: `${capitalize(responseKey)} for movie ${
-        req.params.movieId
-      } retrieved`,
-      [responseKey]: movie[populateField],
-    });
-  } catch (error) {
-    console.error(error.message);
-    return res.status(400).json({
-      status: "error",
-      msg: `Error getting ${responseKey} for movie ${req.params.movieId}`,
-    });
-  }
-};
-
-// Capitalize helper function
-const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);

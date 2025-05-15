@@ -1,7 +1,7 @@
-import UserModel from "../models/UserModel.js";
-import MovieModel from "../models/MovieModel.js";
-import ActorModel from "../models/ActorModel.js";
-import CrewModel from "../models/Crew.js";
+import UserModel from "../models/UserSchema.js";
+import MovieModel from "../models/MovieSchema.js";
+import ActorModel from "../models/ActorSchema.js";
+import CrewModel from "../models/CrewSchema.js";
 
 // Helper function to create users
 const createUsers = async () => {

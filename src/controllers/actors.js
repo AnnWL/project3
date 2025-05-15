@@ -1,10 +1,37 @@
-import ActorModel from "../models/ActorModel.js";
+import ActorModel from "../models/ActorSchema.js";
 import { getByIdOrThrow } from "../utils/db.js";
 import {
   handleResponse,
   handleNotFound,
   handleValidationError,
 } from "../utils/error.js";
+
+// Search actors by name
+export const searchActors = async (req, res) => {
+  try {
+    const { name } = req.query;
+
+    if (!name) {
+      return handleValidationError(res, "Please provide 'name' for search");
+    }
+
+    const actors = await ActorModel.find({
+      name: { $regex: name, $options: "i" },
+    });
+
+    return res.status(200).json({
+      status: "ok",
+      msg: "Actors retrieved",
+      actors,
+    });
+  } catch (error) {
+    console.error(error.message);
+    return res.status(500).json({
+      status: "error",
+      msg: "Error searching actors",
+    });
+  }
+};
 
 const getActorById = (id) => getByIdOrThrow(ActorModel, id);
 

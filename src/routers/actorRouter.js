@@ -4,9 +4,12 @@ import {
   createActor,
   updateActor,
   deleteActor,
-} from "../controllers/actor.js";
+} from "../controllers/actors.js";
+import { searchActors } from "../controllers/actors.js";
 
 const router = express.Router();
+
+router.get("/actors/search", searchActors);
 
 // Get all actors
 router.get("/", getAllActors);
