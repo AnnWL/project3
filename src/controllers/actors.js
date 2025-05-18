@@ -12,24 +12,21 @@ export const searchActors = async (req, res) => {
     const { name } = req.query;
 
     if (!name) {
-      return handleValidationError(res, "Please provide 'name' for search");
+      handleValidationError("Please provide 'name' for search");
     }
 
     const actors = await ActorModel.find({
       name: { $regex: name, $options: "i" },
     });
 
-    return res.status(200).json({
-      status: "ok",
-      msg: "Actors retrieved",
-      actors,
-    });
+    return handleResponse(res, 200, "Actors retrieved", actors, "Actors");
   } catch (error) {
     console.error(error.message);
-    return res.status(500).json({
-      status: "error",
-      msg: "Error searching actors",
-    });
+    return handleResponse(
+      res,
+      error.status || 500,
+      error.message || "Error searching actors"
+    );
   }
 };
 
@@ -39,36 +36,59 @@ const getActorById = (id) => getByIdOrThrow(ActorModel, id);
 export const getAllActors = async (req, res) => {
   try {
     const actors = await ActorModel.find();
-    handleResponse(res, 200, "Actors fetched successfully", actors, "Actors");
+    return handleResponse(
+      res,
+      200,
+      "Actors fetched successfully",
+      actors,
+      "Actors"
+    );
   } catch (error) {
     console.error(error.message);
-    handleResponse(res, 400, "Error getting actors");
+    return handleResponse(res, 400, "Error getting actors");
   }
 };
 
 // Create a new actor (Admin only)
 export const createActor = async (req, res) => {
   try {
-    const { name, age, bio } = req.body;
+    const {
+      ext_id,
+      name,
+      birthday,
+      place_of_birth,
+      nationality,
+      biography,
+      profile_path,
+      popularity,
+    } = req.body;
 
-    // Input validation
-    if (!name || !age || !bio) {
-      throw new handleValidationError(
-        "All fields (name, age, bio) are required"
-      );
+    if (!ext_id || !name) {
+      handleValidationError("Fields 'ext_id' and 'name' are required");
     }
 
     const newActor = new ActorModel({
+      ext_id,
       name,
-      age,
-      bio,
+      birthday,
+      place_of_birth,
+      nationality,
+      biography,
+      profile_path,
+      popularity,
     });
 
     await newActor.save();
-    handleResponse(res, 201, "Actor created successfully", newActor, "Actor");
+    return handleResponse(
+      res,
+      201,
+      "Actor created successfully",
+      newActor,
+      "Actor"
+    );
   } catch (error) {
     console.error(error.message);
-    handleResponse(
+    return handleResponse(
       res,
       error.status || 400,
       error.message || "Error creating actor"
@@ -80,20 +100,34 @@ export const createActor = async (req, res) => {
 export const updateActor = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, age, bio } = req.body;
+    const updates = req.body;
 
-    // Lookup actor by ID
     const actor = await getActorById(id);
 
-    actor.name = name || actor.name;
-    actor.age = age || actor.age;
-    actor.bio = bio || actor.bio;
+    // Update only the fields defined in schema (if provided)
+    if (updates.ext_id !== undefined) actor.ext_id = updates.ext_id;
+    if (updates.name !== undefined) actor.name = updates.name;
+    if (updates.birthday !== undefined) actor.birthday = updates.birthday;
+    if (updates.place_of_birth !== undefined)
+      actor.place_of_birth = updates.place_of_birth;
+    if (updates.nationality !== undefined)
+      actor.nationality = updates.nationality;
+    if (updates.biography !== undefined) actor.biography = updates.biography;
+    if (updates.profile_path !== undefined)
+      actor.profile_path = updates.profile_path;
+    if (updates.popularity !== undefined) actor.popularity = updates.popularity;
 
     await actor.save();
-    handleResponse(res, 200, "Actor updated successfully", actor, "Actor");
+    return handleResponse(
+      res,
+      200,
+      "Actor updated successfully",
+      actor,
+      "Actor"
+    );
   } catch (error) {
     console.error(error.message);
-    handleResponse(
+    return handleResponse(
       res,
       error.status || 400,
       error.message || "Error updating actor"
@@ -106,14 +140,17 @@ export const deleteActor = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Lookup and delete actor by ID
-    const actor = await getActorById(id);
+    // Option 1: direct delete without fetching
+    const deleted = await ActorModel.findByIdAndDelete(id);
 
-    await actor.remove();
-    handleResponse(res, 200, "Actor deleted successfully");
+    if (!deleted) {
+      return handleResponse(res, 404, "Actor not found");
+    }
+
+    return handleResponse(res, 200, "Actor deleted successfully");
   } catch (error) {
     console.error(error.message);
-    handleResponse(
+    return handleResponse(
       res,
       error.status || 400,
       error.message || "Error deleting actor"

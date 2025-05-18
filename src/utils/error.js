@@ -50,7 +50,7 @@ export const handleResponse = (
   resourceType = "Resource"
 ) => {
   return res.status(status).json({
-    status: status === 200 ? "ok" : "error",
+    status: status === 200 || status === 201 ? "ok" : "error",
     msg,
     [resourceType.toLowerCase()]: resource,
   });

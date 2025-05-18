@@ -1,4 +1,5 @@
 import ReviewModel from "../models/ReviewSchema.js";
+import { handleValidationError, handleNotFound } from "../utils/error.js";
 
 // Get all reviews for a movie (Public)
 export const getMovieReviews = async (req, res) => {

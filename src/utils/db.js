@@ -5,7 +5,7 @@ export const getByIdOrThrow = async (Model, id) => {
   if (!doc) {
     // Use Model.modelName as fallback name
     const entityName = Model.modelName || "Document";
-    throw new handleNotFound(entityName, id);
+    handleNotFound(entityName, id);
   }
   return doc;
 };

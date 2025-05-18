@@ -9,7 +9,7 @@ import { searchActors } from "../controllers/actors.js";
 
 const router = express.Router();
 
-router.get("/actors/search", searchActors);
+router.get("/search", searchActors);
 
 // Get all actors
 router.get("/", getAllActors);

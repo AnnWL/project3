@@ -1,6 +1,5 @@
 import MovieModel from "../models/MovieSchema.js";
 import ActorModel from "../models/ActorSchema.js";
-//import CrewModel from "../models/CrewSchema.js";
 import {
   handleNotFound,
   handleValidationError,
@@ -34,7 +33,7 @@ export const searchMovies = async (req, res) => {
       );
     }
 
-    const movies = await MovieModel.find(query);
+    const movies = await MovieModel.find(query).populate("actors");
 
     return res.status(200).json({
       status: "ok",
@@ -53,7 +52,7 @@ export const searchMovies = async (req, res) => {
 // Get all movies
 export const getAllMovies = async (req, res) => {
   try {
-    const movies = await MovieModel.find().populate("actors").populate("crew");
+    const movies = await MovieModel.find().populate("actors");
     return res.status(200).json({
       status: "ok",
       msg: "Listing all movies",
@@ -71,9 +70,9 @@ export const getAllMovies = async (req, res) => {
 // Get a movie by ID
 export const getMovieById = async (req, res) => {
   try {
-    const movie = await MovieModel.findById(req.params.movieId)
-      .populate("actors")
-      .populate("crew");
+    const movie = await MovieModel.findById(req.params.movieId).populate(
+      "actors"
+    );
 
     if (!movie) return handleNotFound(res, "Movie", req.params.movieId);
 
@@ -95,117 +94,95 @@ export const getMovieById = async (req, res) => {
 // Helper functions
 // =========================
 
-// Get movie cast or crew
-const getMovieEntity = async (req, res, populateField, responseKey) => {
+// Get movie cast (actors)
+export const getMovieCast = async (req, res) => {
   try {
     const movie = await MovieModel.findById(req.params.movieId).populate(
-      populateField
+      "actors"
     );
     if (!movie) return handleNotFound(res, "Movie", req.params.movieId);
 
     return res.status(200).json({
       status: "ok",
-      msg: `${capitalize(responseKey)} for movie ${
-        req.params.movieId
-      } retrieved`,
-      [responseKey]: movie[populateField],
+      msg: `Cast for movie ${req.params.movieId} retrieved`,
+      cast: movie.actors,
     });
   } catch (error) {
     console.error(error.message);
     return res.status(400).json({
       status: "error",
-      msg: `Error getting ${responseKey} for movie ${req.params.movieId}`,
+      msg: `Error getting cast for movie ${req.params.movieId}`,
     });
   }
-};
-
-// Capitalize helper function
-const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1);
-
-// Get movie cast (actors)
-export const getMovieCast = async (req, res) => {
-  return getMovieEntity(req, res, "actors", "cast");
-};
-
-// Get movie crew
-export const getMovieCrew = async (req, res) => {
-  return getMovieEntity(req, res, "crew", "crew");
 };
 
 // =========================
 // Admin endpoints
 // =========================
 
-// Add an actor or crew to a movie
-export const addEntityToMovie = async (req, res, entityType) => {
+// Add an actor to a movie
+export const addActorToMovie = async (req, res) => {
   try {
     const movieId = req.params.movieId;
-    const entityId = req.body[`${entityType}Id`];
+    const actorId = req.body.actorId;
 
-    const entityModel = entityType === "actor" ? ActorModel : CrewModel;
-    const entity = await entityModel.findById(entityId);
-    if (!entity) return handleNotFound(res, entityType, entityId);
+    const actor = await ActorModel.findById(actorId);
+    if (!actor) return handleNotFound(res, "Actor", actorId);
 
     const movie = await MovieModel.findById(movieId);
     if (!movie) return handleNotFound(res, "Movie", movieId);
 
-    const collection = movie[`${entityType}s`];
-    if (collection.includes(entityId)) {
+    if (movie.actors.includes(actorId)) {
       return handleValidationError(
         res,
-        `${
-          entityType.charAt(0).toUpperCase() + entityType.slice(1)
-        } ${entityId} already in movie ${movieId}`
+        `Actor ${actorId} already in movie ${movieId}`
       );
     }
 
-    collection.push(entityId);
+    movie.actors.push(actorId);
     await movie.save();
 
     return res.status(200).json({
       status: "ok",
-      msg: `${capitalize(entityType)} ${entityId} added to movie ${movieId}`,
+      msg: `Actor ${actorId} added to movie ${movieId}`,
       movie,
     });
   } catch (error) {
     console.error(error.message);
     return res.status(400).json({
       status: "error",
-      msg: `Error adding ${entityType} to movie`,
+      msg: "Error adding actor to movie",
     });
   }
 };
 
-// Remove an actor or crew from a movie
-export const removeEntityFromMovie = async (req, res, entityType) => {
+// Remove an actor from a movie
+export const removeActorFromMovie = async (req, res) => {
   try {
-    const { movieId, entityId } = req.params;
+    const { movieId, actorId } = req.params;
 
     const movie = await MovieModel.findById(movieId);
     if (!movie) return handleNotFound(res, "Movie", movieId);
 
-    const collection = movie[`${entityType}s`];
-    const index = collection.indexOf(entityId);
+    const index = movie.actors.indexOf(actorId);
 
     if (index === -1) {
-      return handleNotFound(res, capitalize(entityType), entityId);
+      return handleNotFound(res, "Actor", actorId);
     }
 
-    collection.splice(index, 1);
+    movie.actors.splice(index, 1);
     await movie.save();
 
     return res.status(200).json({
       status: "ok",
-      msg: `${capitalize(
-        entityType
-      )} ${entityId} removed from movie ${movieId}`,
+      msg: `Actor ${actorId} removed from movie ${movieId}`,
       movie,
     });
   } catch (error) {
     console.error(error.message);
     return res.status(400).json({
       status: "error",
-      msg: `Error removing ${entityType} from movie`,
+      msg: "Error removing actor from movie",
     });
   }
 };
@@ -213,21 +190,45 @@ export const removeEntityFromMovie = async (req, res, entityType) => {
 // Create a movie (Admin only)
 export const createMovie = async (req, res) => {
   try {
-    const { title, releaseDate, genre, plot, actors, crew } = req.body;
+    const {
+      ext_id,
+      title,
+      releaseDate,
+      runtime,
+      description,
+      tagline,
+      collection_poster_path,
+      poster_path,
+      popularity,
+      vote_average,
+      vote_count,
+      genre,
+      keywords,
+      actors,
+    } = req.body;
+
+    if (!ext_id || !title) {
+      return handleValidationError(res, "'ext_id' and 'title' are required");
+    }
 
     const actorError = await validateIdsExist(ActorModel, actors, "Actor");
     if (actorError) return handleValidationError(res, actorError);
 
-    const crewError = await validateIdsExist(CrewModel, crew, "Crew member");
-    if (crewError) return handleValidationError(res, crewError);
-
     const newMovie = new MovieModel({
+      ext_id,
       title,
       releaseDate,
+      runtime,
+      description,
+      tagline,
+      collection_poster_path,
+      poster_path,
+      popularity,
+      vote_average,
+      vote_count,
       genre,
-      plot,
+      keywords,
       actors: actors || [],
-      crew: crew || [],
     });
 
     await newMovie.save();
@@ -255,23 +256,19 @@ export const updateMovie = async (req, res) => {
     const movie = await MovieModel.findById(movieId);
     if (!movie) return handleNotFound(res, "Movie", movieId);
 
-    const actorError = await validateIdsExist(
-      ActorModel,
-      updates.actors,
-      "Actor"
-    );
-    if (actorError) return handleValidationError(res, actorError);
-
-    const crewError = await validateIdsExist(
-      CrewModel,
-      updates.crew,
-      "Crew member"
-    );
-    if (crewError) return handleValidationError(res, crewError);
+    // Optional: Validate actors if present
+    if (updates.actors) {
+      const actorError = await validateIdsExist(
+        ActorModel,
+        updates.actors,
+        "Actor"
+      );
+      if (actorError) return handleValidationError(res, actorError);
+    }
 
     const updatedMovie = await MovieModel.findByIdAndUpdate(movieId, updates, {
       new: true,
-    }).populate("actors crew");
+    }).populate("actors");
 
     return res.status(200).json({
       status: "ok",

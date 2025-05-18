@@ -13,8 +13,6 @@ const castSchema = new mongoose.Schema(
       required: true,
     },
     character: { type: String, required: true },
-    cast_order: { type: Number },
-    // any other role-in-movie specific info
   },
   { timestamps: true, collection: "cast" }
 );

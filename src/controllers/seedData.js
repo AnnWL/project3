@@ -142,7 +142,8 @@ const createMovies = async () => {
       popularity: 150.437577,
       vote_average: 7.2,
       vote_count: 11800,
-      genres: ["Action", "Adventure", "Fantasy", "Science Fiction"],
+      genre: ["Action", "Adventure", "Fantasy", "Science Fiction"],
+      keywords: ["pandora", "marine", "avatar", "alien", "space"],
       cast: [
         { actor_ext_id: 65731, character: "Jake Sully" },
         { actor_ext_id: 8691, character: "Neytiri" },
@@ -164,7 +165,8 @@ const createMovies = async () => {
       popularity: 100.125,
       vote_average: 7.9,
       vote_count: 11000,
-      genres: ["Action", "Adventure", "Fantasy"],
+      genre: ["Action", "Adventure", "Fantasy"],
+      keywords: ["pirates", "curse", "black pearl", "pirate ship", "treasure"],
       cast: [
         { actor_ext_id: 2231, character: "Jack Sparrow" },
         { actor_ext_id: 504, character: "Will Turner" },
