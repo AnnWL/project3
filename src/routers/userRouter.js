@@ -7,15 +7,16 @@ import {
   addToFavorites,
   addToWatchList,
 } from "../controllers/users.js";
+import { authenticateUser } from "../middleware/user.js";
 
 const router = express.Router();
 
 // Public routes
-router.get("/profile", getProfile); // Get logged-in user's profile
+router.get("/profile", authenticateUser, getProfile); // Get logged-in user's profile
 
 // User routes
-router.post("/favorites", addToFavorites); // Add movie to favorites
-router.post("/watchlist", addToWatchList); // Add movie to watch list
+router.post("/favorites", authenticateUser, addToFavorites); // Add movie to favorites
+router.post("/watchlist", authenticateUser, addToWatchList); // Add movie to watch list
 
 // Admin routes (to add middleware later on)
 router.get("/", getAllUsers); // Get all users (Admin only)

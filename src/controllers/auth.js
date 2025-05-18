@@ -69,7 +69,7 @@ export const login = async (req, res, next) => {
     }
 
     // Generate JWT tokens using generateJwt from authUtils
-    const claims = { username: user.username };
+    const claims = { id: user._id, username: user.username };
     const accessToken = generateJwt(claims, process.env.ACCESS_SECRET, "20m");
     const refreshToken = generateJwt(claims, process.env.REFRESH_SECRET, "30d");
 
