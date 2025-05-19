@@ -30,7 +30,21 @@ export const searchActors = async (req, res) => {
   }
 };
 
-const getActorById = (id) => getByIdOrThrow(ActorModel, id);
+// Get actor by Id
+export const getActorById = async (req, res) => {
+  try {
+    const actor = await ActorModel.findById(req.params.id);
+    if (!actor) {
+      return res
+        .status(404)
+        .json({ status: "error", message: "Actor not found" });
+    }
+    res.json({ status: "ok", actor });
+  } catch (error) {
+    console.error("Error in getActorById:", error);
+    res.status(500).json({ status: "error", message: error.message });
+  }
+};
 
 // Get all actors
 export const getAllActors = async (req, res) => {

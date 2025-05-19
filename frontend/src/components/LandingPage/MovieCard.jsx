@@ -1,5 +1,5 @@
 import React from "react";
-import "./Movie.module.css"; // 可选的样式文件
+import "./Movie.module.css";
 
 const MovieCard = ({ movie }) => {
   const posterUrl = `https://image.tmdb.org/t/p/w200${movie.poster_path}`;

@@ -4,6 +4,7 @@ import {
   createActor,
   updateActor,
   deleteActor,
+  getActorById,
 } from "../controllers/actors.js";
 import { searchActors } from "../controllers/actors.js";
 
@@ -13,6 +14,9 @@ router.get("/search", searchActors);
 
 // Get all actors
 router.get("/", getAllActors);
+
+// Get a single actor by ID
+router.get("/:id", getActorById);
 
 // Create a new actor (Admin only)
 router.post("/", createActor);

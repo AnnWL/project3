@@ -1,0 +1,26 @@
+.actorPage {
+  padding: 2rem;
+  max-width: 900px;
+  margin: auto;
+  font-family: sans-serif;
+}
+
+.actorHeader {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.actorHeader img {
+  border-radius: 10px;
+  width: 200px;
+}
+
+.actorDetails {
+  flex: 1;
+}
+
+.actorBio,
+.knownFor {
+  margin-top: 2rem;
+}

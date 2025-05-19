@@ -15,8 +15,6 @@ const movieSchema = new mongoose.Schema(
     vote_count: { type: Number },
     genre: { type: [String] },
     keywords: { type: [String] },
-    actors: [{ type: mongoose.Schema.Types.ObjectId, ref: "Actor" }], // <-- Add this
-    // Optional: remove 'review' here if you're using a separate ReviewModel
   },
   { timestamps: true, collection: "movie" }
 );

@@ -1,11 +1,15 @@
 import React from "react";
-import LandingPage from "./pages/LandingPage";
+import { Routes, Route } from "react-router-dom";
+import ActorPage from "./components/ActorPage/ActorPage";
+import LandingPage from "./components/LandingPage/LandingPage";
 
 function App() {
   return (
-    <div>
-      <LandingPage></LandingPage>
-    </div>
+    <Routes>
+      {/* <Route path="/" element={<LandingPage />} /> */}
+      <Route path="/actors/:id" element={<ActorPage />} />
+      {/* <Route path="/movies/:id" element={<MoviePage />} /> */}
+    </Routes>
   );
 }
 

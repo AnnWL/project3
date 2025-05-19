@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import SearchBar from "../components/SearchBar";
-import MovieList from "../components/MovieList";
-import LoginButton from "../components/LoginButton";
+import SearchBar from "./SearchBar";
+import MovieList from "./MovieList";
+import LoginButton from "./LoginButton";
 
 const LandingPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
