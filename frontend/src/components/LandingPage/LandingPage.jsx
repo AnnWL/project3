@@ -15,6 +15,25 @@ const LandingPage = () => {
   const [actors, setActors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [userData, setUserData] = useState(null);
+
+  // Fetch user data after login
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch(`/api/users/profile`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.msg);
+        setUserData(data);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    if (localStorage.getItem("token")) fetchUserData();
+  }, [localStorage.getItem("token")]);
 
   // Fetch all movies initially for top rated section
   useEffect(() => {
@@ -92,6 +111,32 @@ const LandingPage = () => {
       <h1>🎬 Movie App</h1>
       <LoginButton />
       <br />
+      {userData && (
+        <>
+          <h2>Your Favorites</h2>
+          <ul>
+            {userData.favorites.length > 0 ? (
+              userData.favorites.map((movie) => (
+                <li key={movie._id}>{movie.title}</li>
+              ))
+            ) : (
+              <p>No favorite movies yet.</p>
+            )}
+          </ul>
+
+          <h2>Watchlist</h2>
+          <ul>
+            {userData.toWatch.length > 0 ? (
+              userData.toWatch.map((movie) => (
+                <li key={movie._id}>{movie.title}</li>
+              ))
+            ) : (
+              <p>Your watchlist is empty.</p>
+            )}
+          </ul>
+        </>
+      )}
+
       <label>
         Search for:{" "}
         <select
