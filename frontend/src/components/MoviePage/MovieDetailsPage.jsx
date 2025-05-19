@@ -17,8 +17,9 @@ const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
 
         const data = await response.json();
         setMovie(data);
-      } catch (error) {
-        console.error("Error fetching movie data:", error);
+      } catch (err) {
+        console.error("Error fetching movie data:", err);
+        setError("Failed to load movie details. Please try again.");
       }
     };
 
