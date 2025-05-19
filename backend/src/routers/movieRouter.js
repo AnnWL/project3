@@ -9,11 +9,13 @@ import {
   updateMovie,
   deleteMovie,
   searchMovies,
+  getGenres,
 } from "../controllers/movies.js";
 
 const router = express.Router();
 
 // Public endpoints
+router.get("/genres", getGenres);
 router.get("/search", searchMovies);
 router.get("/", getAllMovies); // Get all movies
 router.get("/:movieId", getMovieById); // Get movie by ID

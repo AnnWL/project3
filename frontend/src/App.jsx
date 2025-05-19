@@ -6,9 +6,8 @@ import LandingPage from "./components/LandingPage/LandingPage";
 function App() {
   return (
     <Routes>
-      {/* <Route path="/" element={<LandingPage />} /> */}
+      <Route path="/" element={<LandingPage />} />
       <Route path="/actors/:id" element={<ActorPage />} />
-      {/* <Route path="/movies/:id" element={<MoviePage />} /> */}
     </Routes>
   );
 }

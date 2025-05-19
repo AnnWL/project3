@@ -1,5 +1,6 @@
 import MovieModel from "../models/MovieSchema.js";
 import ActorModel from "../models/ActorSchema.js";
+import CastModel from "../models/CastSchema.js";
 import {
   handleNotFound,
   handleValidationError,
@@ -33,8 +34,7 @@ export const searchMovies = async (req, res) => {
       );
     }
 
-    const movies = await MovieModel.find(query).populate("actors");
-
+    const movies = await MovieModel.find(query);
     return res.status(200).json({
       status: "ok",
       msg: "Movies retrieved",
@@ -52,7 +52,7 @@ export const searchMovies = async (req, res) => {
 // Get all movies
 export const getAllMovies = async (req, res) => {
   try {
-    const movies = await MovieModel.find().populate("actors");
+    const movies = await MovieModel.find();
     return res.status(200).json({
       status: "ok",
       msg: "Listing all movies",
@@ -70,16 +70,16 @@ export const getAllMovies = async (req, res) => {
 // Get a movie by ID
 export const getMovieById = async (req, res) => {
   try {
-    const movie = await MovieModel.findById(req.params.movieId).populate(
-      "actors"
-    );
-
+    const movie = await MovieModel.findById(req.params.movieId);
     if (!movie) return handleNotFound(res, "Movie", req.params.movieId);
+
+    const cast = await CastModel.find({ movie: movie._id }).populate("actor");
 
     return res.status(200).json({
       status: "ok",
       msg: `Movie ${req.params.movieId} retrieved`,
       movie,
+      cast,
     });
   } catch (error) {
     console.error(error.message);
@@ -90,22 +90,18 @@ export const getMovieById = async (req, res) => {
   }
 };
 
-// =========================
-// Helper functions
-// =========================
-
-// Get movie cast (actors)
+// Get movie cast
 export const getMovieCast = async (req, res) => {
   try {
-    const movie = await MovieModel.findById(req.params.movieId).populate(
-      "actors"
-    );
+    const movie = await MovieModel.findById(req.params.movieId);
     if (!movie) return handleNotFound(res, "Movie", req.params.movieId);
+
+    const cast = await CastModel.find({ movie: movie._id }).populate("actor");
 
     return res.status(200).json({
       status: "ok",
       msg: `Cast for movie ${req.params.movieId} retrieved`,
-      cast: movie.actors,
+      cast,
     });
   } catch (error) {
     console.error(error.message);
@@ -116,36 +112,61 @@ export const getMovieCast = async (req, res) => {
   }
 };
 
+// Get all unique genres from movies
+export const getGenres = async (req, res) => {
+  try {
+    const genres = await MovieModel.distinct("genre");
+    // genres might be an array like ['Action', 'Drama', 'Comedy', ...]
+    return res.status(200).json({
+      status: "ok",
+      genres,
+    });
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ status: "error", msg: "Failed to fetch genres" });
+  }
+};
+
 // =========================
 // Admin endpoints
 // =========================
 
-// Add an actor to a movie
+// Add an actor to a movie (via Cast model)
 export const addActorToMovie = async (req, res) => {
   try {
-    const movieId = req.params.movieId;
-    const actorId = req.body.actorId;
+    const { movieId } = req.params;
+    const { actorId, character } = req.body;
 
-    const actor = await ActorModel.findById(actorId);
-    if (!actor) return handleNotFound(res, "Actor", actorId);
+    const [movie, actor] = await Promise.all([
+      MovieModel.findById(movieId),
+      ActorModel.findById(actorId),
+    ]);
 
-    const movie = await MovieModel.findById(movieId);
     if (!movie) return handleNotFound(res, "Movie", movieId);
+    if (!actor) return handleNotFound(res, "Actor", actorId);
+    if (!character)
+      return handleValidationError(res, "'character' is required");
 
-    if (movie.actors.includes(actorId)) {
+    const existing = await CastModel.findOne({
+      movie: movieId,
+      actor: actorId,
+    });
+    if (existing) {
       return handleValidationError(
         res,
-        `Actor ${actorId} already in movie ${movieId}`
+        `Actor ${actorId} already cast in movie ${movieId}`
       );
     }
 
-    movie.actors.push(actorId);
-    await movie.save();
+    const cast = new CastModel({ movie: movieId, actor: actorId, character });
+    await cast.save();
 
-    return res.status(200).json({
+    return res.status(201).json({
       status: "ok",
-      msg: `Actor ${actorId} added to movie ${movieId}`,
-      movie,
+      msg: `Actor ${actorId} added to movie ${movieId} as ${character}`,
+      cast,
     });
   } catch (error) {
     console.error(error.message);
@@ -161,22 +182,18 @@ export const removeActorFromMovie = async (req, res) => {
   try {
     const { movieId, actorId } = req.params;
 
-    const movie = await MovieModel.findById(movieId);
-    if (!movie) return handleNotFound(res, "Movie", movieId);
+    const deleted = await CastModel.findOneAndDelete({
+      movie: movieId,
+      actor: actorId,
+    });
 
-    const index = movie.actors.indexOf(actorId);
-
-    if (index === -1) {
-      return handleNotFound(res, "Actor", actorId);
+    if (!deleted) {
+      return handleNotFound(res, "Cast entry", `${movieId}-${actorId}`);
     }
-
-    movie.actors.splice(index, 1);
-    await movie.save();
 
     return res.status(200).json({
       status: "ok",
       msg: `Actor ${actorId} removed from movie ${movieId}`,
-      movie,
     });
   } catch (error) {
     console.error(error.message);
@@ -187,7 +204,7 @@ export const removeActorFromMovie = async (req, res) => {
   }
 };
 
-// Create a movie (Admin only)
+// Create a movie (no cast added here)
 export const createMovie = async (req, res) => {
   try {
     const {
@@ -204,15 +221,11 @@ export const createMovie = async (req, res) => {
       vote_count,
       genre,
       keywords,
-      actors,
     } = req.body;
 
     if (!ext_id || !title) {
       return handleValidationError(res, "'ext_id' and 'title' are required");
     }
-
-    const actorError = await validateIdsExist(ActorModel, actors, "Actor");
-    if (actorError) return handleValidationError(res, actorError);
 
     const newMovie = new MovieModel({
       ext_id,
@@ -228,7 +241,6 @@ export const createMovie = async (req, res) => {
       vote_count,
       genre,
       keywords,
-      actors: actors || [],
     });
 
     await newMovie.save();
@@ -247,7 +259,7 @@ export const createMovie = async (req, res) => {
   }
 };
 
-// Update a movie (Admin only)
+// Update a movie
 export const updateMovie = async (req, res) => {
   try {
     const { movieId } = req.params;
@@ -256,19 +268,9 @@ export const updateMovie = async (req, res) => {
     const movie = await MovieModel.findById(movieId);
     if (!movie) return handleNotFound(res, "Movie", movieId);
 
-    // Optional: Validate actors if present
-    if (updates.actors) {
-      const actorError = await validateIdsExist(
-        ActorModel,
-        updates.actors,
-        "Actor"
-      );
-      if (actorError) return handleValidationError(res, actorError);
-    }
-
     const updatedMovie = await MovieModel.findByIdAndUpdate(movieId, updates, {
       new: true,
-    }).populate("actors");
+    });
 
     return res.status(200).json({
       status: "ok",
@@ -284,15 +286,18 @@ export const updateMovie = async (req, res) => {
   }
 };
 
-// Delete a movie (Admin only)
+// Delete a movie
 export const deleteMovie = async (req, res) => {
   try {
     const movie = await MovieModel.findByIdAndDelete(req.params.movieId);
     if (!movie) return handleNotFound(res, "Movie", req.params.movieId);
 
+    // Clean up related cast entries
+    await CastModel.deleteMany({ movie: req.params.movieId });
+
     return res.status(200).json({
       status: "ok",
-      msg: `Movie ${req.params.movieId} deleted successfully`,
+      msg: `Movie ${req.params.movieId} and related cast deleted successfully`,
     });
   } catch (error) {
     console.error(error.message);

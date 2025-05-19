@@ -1,6 +1,7 @@
 {
   "name": "blah",
   "private": true,
+  "proxy": "http://localhost:5001",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -10,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "lodash.debounce": "^4.0.8",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.6.0"
