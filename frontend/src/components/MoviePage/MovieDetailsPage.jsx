@@ -86,7 +86,9 @@ const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
               value={rating}
               onChange={(e) => setRating(e.target.value)}
             />
+
             <button onClick={handleReviewSubmit}>Submit</button>
+
             <button onClick={() => setShowReviewPopup(false)}>Cancel</button>
           </div>
         </div>

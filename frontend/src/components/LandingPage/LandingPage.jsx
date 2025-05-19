@@ -91,7 +91,7 @@ const LandingPage = () => {
     <div className={styles.landingPage}>
       <h1>🎬 Movie App</h1>
       <LoginButton />
-
+      <br />
       <label>
         Search for:{" "}
         <select
