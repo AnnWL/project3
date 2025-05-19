@@ -22,7 +22,7 @@ const LandingPage = () => {
     const fetchUserData = async () => {
       try {
         const response = await fetch(`/api/users/profile`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }, //after login, token is stored locally in browser
         });
         const data = await response.json();
         if (!response.ok) throw new Error(data.msg);
