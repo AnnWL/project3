@@ -2,6 +2,7 @@ import React from "react";
 import { Routes, Route } from "react-router-dom";
 import ActorPage from "./components/ActorPage/ActorPage";
 import LandingPage from "./components/LandingPage/LandingPage";
+import MoviePage from "./components/MoviePage/MovieDetailsPage";
 
 function App() {
   return (

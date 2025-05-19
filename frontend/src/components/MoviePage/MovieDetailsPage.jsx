@@ -1,10 +1,31 @@
-import React, { useState } from "react";
-import styles from "./MoviePage.module.css"
+import React, { useEffect, useState } from "react";
+import styles from "./MoviePage.module.css";
 
-const MoviePage = ({ movie, actors, onClose, onActorClick }) => {
+const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
+  const [movie, setMovie] = useState(null);
   const [showReviewPopup, setShowReviewPopup] = useState(false);
   const [review, setReview] = useState("");
   const [rating, setRating] = useState("");
+
+  useEffect(() => {
+    const fetchMovieData = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5001/api/movies/${movieId}`
+        );
+        if (!response.ok) throw new Error("Failed to fetch movie data");
+
+        const data = await response.json();
+        setMovie(data);
+      } catch (error) {
+        console.error("Error fetching movie data:", error);
+      }
+    };
+
+    if (movieId) {
+      fetchMovieData();
+    }
+  }, [movieId]);
 
   const handleReviewSubmit = () => {
     console.log("Review submitted:", { review, rating });
@@ -27,13 +48,17 @@ const MoviePage = ({ movie, actors, onClose, onActorClick }) => {
           <p> Release Date: {movie.release_date}</p>
           <h3>Main Cast:</h3>
           <ul>
-            {actors.map((actor) => (
-              <li key={actor.id}>
-                <button onClick={() => onActorClick(actor)}>
-                  {actor.name}
-                </button>
-              </li>
-            ))}
+            {actors?.length > 0 ? (
+              actors.map((actor) => (
+                <li key={actor.id}>
+                  <button onClick={() => onActorClick(actor)}>
+                    {actor.name}
+                  </button>
+                </li>
+              ))
+            ) : (
+              <p>No cast information available.</p>
+            )}
           </ul>
           <button onClick={onClose}>Close</button>
 
@@ -69,5 +94,4 @@ const MoviePage = ({ movie, actors, onClose, onActorClick }) => {
   );
 };
 
-export default MoviePage;
-
+export default MovieDetailsPage;
