@@ -4,8 +4,9 @@ import styles from "./MoviePage.module.css";
 const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
   const [movie, setMovie] = useState(null);
   const [showReviewPopup, setShowReviewPopup] = useState(false);
-  const [review, setReview] = useState("");
+  const [reviews, setReviews] = useState([]);
   const [rating, setRating] = useState("");
+  const [error,setError] = useState(null)
 
   useEffect(() => {
     const fetchMovieData = async () => {
@@ -28,9 +29,47 @@ const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
     }
   }, [movieId]);
 
-  const handleReviewSubmit = () => {
-    console.log("Review submitted:", { review, rating });
-    setShowReviewPopup(false);
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5001/api/movies/${movieId}/reviews`
+        );
+        const data = await response.json();
+        if (response.ok) {
+          setReviews(data.reviews);
+        } else {
+          console.error("Failed to fetch reviews:", data.msg);
+        }
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
+    if (movieId) fetchReviews();
+  }, [movieId]);
+
+  const handleReviewSubmit = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5001/api/movies/${movieId}/reviews`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ rating, comment: review }),
+        }
+      );
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Review added:", data);
+        setShowReviewPopup(false);
+      } else {
+        console.error("Review submission failed:", data.msg);
+      }
+    } catch (error) {
+      console.error("Error submitting review:", error);
+    }
   };
 
   return (
@@ -59,6 +98,19 @@ const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
               ))
             ) : (
               <p>No cast information available.</p>
+            )}
+          </ul>
+          <h3>Reviews:</h3>
+          <ul>
+            {reviews.length > 0 ? (
+              reviews.map((review) => (
+                <li key={review._id}>
+                  <strong>{review.user.username}:</strong> {review.comment} (⭐{" "}
+                  {review.rating})
+                </li>
+              ))
+            ) : (
+              <p>No reviews yet. Be the first to review!</p>
             )}
           </ul>
           <button onClick={onClose}>Close</button>
