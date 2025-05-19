@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import styles from "./MoviePage.module.css";
 
 const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
   const [movie, setMovie] = useState(null);
   const [showReviewPopup, setShowReviewPopup] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const [review, setReview] = useState("");
   const [rating, setRating] = useState("");
-  const [error,setError] = useState(null)
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchMovieData = async () => {
