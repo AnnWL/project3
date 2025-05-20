@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styles from "./LandingPage.module.css";
 
+const imageBaseUrl = "https://image.tmdb.org/t/p/w300";
+
 const ActorList = ({ actors }) => {
   if (!actors.length) return <p>No actors found.</p>;
 
@@ -9,8 +11,12 @@ const ActorList = ({ actors }) => {
     <div className={styles.movieList}>
       {actors.map((actor) => (
         <div key={actor._id} className={styles.movieCard}>
-          {actor.photo && (
-            <img src={actor.photo} alt={actor.name} className={styles.poster} />
+          {actor.profile_path && (
+            <img
+              src={`${imageBaseUrl}${actor.profile_path}`}
+              alt={actor.name}
+              className={styles.poster}
+            />
           )}
           <div className={styles.cardContent}>
             <h3 className={styles.title}>{actor.name}</h3>

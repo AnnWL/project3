@@ -30,14 +30,13 @@ const ActorPage = () => {
   return (
     <div className={styles.actorPage}>
       <div className={styles.actorHeader}>
-        <img
-          src={
-            actor.profile_path
-              ? `${imageBaseUrl}${actor.profile_path}`
-              : "fallback.jpg"
-          }
-          alt={actor.name}
-        />
+        {actor.profile_path && (
+          <img
+            src={`${imageBaseUrl}${actor.profile_path}`}
+            alt={actor.name}
+            className={styles.poster}
+          />
+        )}
         <div className={styles.actorDetails}>
           <h1>{actor.name}</h1>
           <p>
