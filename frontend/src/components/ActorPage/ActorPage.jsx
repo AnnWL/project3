@@ -59,7 +59,6 @@ const ActorPage = () => {
         <p>{actor.biography || "No biography available."}</p>
       </div>
 
-      {/* Back to Home link */}
       <div style={{ textAlign: "center", marginTop: "2rem" }}>
         <Link to="/" className={styles.backLink}>
           ← Back to Home

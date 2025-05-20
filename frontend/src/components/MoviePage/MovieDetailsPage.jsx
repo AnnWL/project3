@@ -131,11 +131,11 @@ const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
               value={review}
               onChange={(e) => setReview(e.target.value)}
             />
-            <label>Rating (0-5):</label>
+            <label>Rating (1-10):</label>
             <input
               type="number"
-              min="0"
-              max="5"
+              min="1"
+              max="10"
               value={rating}
               onChange={(e) => setRating(e.target.value)}
             />
