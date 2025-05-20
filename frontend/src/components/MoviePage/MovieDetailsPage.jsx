@@ -1,6 +1,6 @@
 import React, { use, useEffect, useState } from "react";
 import styles from "./MoviePage.module.css";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 const MovieDetailsPage = ({ user }) => {
   const { id } = useParams();
@@ -63,18 +63,21 @@ const MovieDetailsPage = ({ user }) => {
   useEffect(() => {
     const fetchCast = async () => {
       try {
+        if (!movie || !movie.ext_id) return;
+
         const response = await fetch(
-          `http://localhost:5001/api/movies/${id}/cast`
+          `http://localhost:5001/api/movies/${movie.ext_id}/cast`
         );
         const data = await response.json();
-        console.log("Fetched Cast Data:", data.cast); // Debugging
+        console.log("Fetched Cast Data:", data.cast);
 
-        // Store only character name and original name
+        // Store only character name and name
         setCast(
-          data.cast.map((actor) => ({
-            original_name: actor.original_name,
-            character: actor.character,
-            id: actor.id,
+          data.cast.map((castItem) => ({
+            name: castItem.name,
+            character: castItem.character,
+            id: castItem.actor?._id,
+            profile_path: castItem.profile_path,
           }))
         );
       } catch (error) {
@@ -82,8 +85,8 @@ const MovieDetailsPage = ({ user }) => {
       }
     };
 
-    if (id) fetchCast();
-  }, [id]);
+    fetchCast();
+  }, [movie?.ext_id]); // ✅ Now fetchCast is accessible
 
   const handleReviewSubmit = async () => {
     if (!user || !user.token) {
@@ -215,16 +218,21 @@ const MovieDetailsPage = ({ user }) => {
               <h2>{movie.title}</h2>
               <p>{movie.description}</p>
               <p>⭐ Rating: {movie.vote_average?.toFixed(1)}</p>
-              <p>Release Date: {movie.release_date}</p>
+              <p>
+                Release Date:{" "}
+                {format(new Date(movie.releaseDate), "MMMM d, yyyy")}
+              </p>
             </>
           ) : (
             <p>Loading movie details...</p>
           )}
 
-          {movie?.genre?.length > 0 ? (
+          {movie?.genre && movie.genre.length > 0 ? (
             <p>
               <strong>Genres:</strong>{" "}
-              {movie.genre.map((genre) => genre.name).join(", ")}
+              {Array.isArray(movie.genre)
+                ? movie.genre.join(", ")
+                : movie.genre}
             </p>
           ) : (
             <p>No genre information available.</p>
@@ -233,10 +241,24 @@ const MovieDetailsPage = ({ user }) => {
           {/* ✅ Display cast list */}
           <h3>Cast:</h3>
           {cast.length > 0 ? (
-            <ul>
-              {cast.map((actor) => (
-                <li key={actor.id}>
-                  <strong>{actor.original_name}</strong> as {actor.character}
+            <ul className={styles.castList}>
+              {cast.slice(0, 8).map((actor) => (
+                <li key={actor.id} className={styles.castItem}>
+                  {actor.profile_path ? (
+                    <img
+                      src={`https://image.tmdb.org/t/p/w45${actor.profile_path}`}
+                      alt={actor.name}
+                      className={styles.castImage}
+                    />
+                  ) : (
+                    <div className={styles.castImagePlaceholder}></div>
+                  )}
+                  <div className={styles.castText}>
+                    <strong>{actor.name}</strong>
+                    <div className={styles.characterText}>
+                      as {actor.character}
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>

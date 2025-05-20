@@ -19,7 +19,7 @@ router.get("/genres", getGenres);
 router.get("/search", searchMovies);
 router.get("/", getAllMovies); // Get all movies
 router.get("/:movieId", getMovieById); // Get movie by ID
-router.get("/:movieId/cast", getMovieCast); // Get movie cast
+router.get("/:extId/cast", getMovieCast); // Get movie cast
 
 // Registered User endpoints
 router.post("/:movieId/actors", addActorToMovie); // Add actor to movie
