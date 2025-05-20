@@ -1,7 +1,7 @@
 import React from "react";
 import MovieList from "./MovieList";
 
-const TopRatedMovies = ({ movies }) => {
+const TopRatedMovies = ({ movies, favouriteMovieIds, addFavouriteMovie }) => {
   const filteredMovies =
     movies?.filter((movie) => movie.vote_average > 7) || [];
 
@@ -21,7 +21,11 @@ const TopRatedMovies = ({ movies }) => {
       >
         ⭐ Top Rated Movies
       </h2>
-      <MovieList movies={filteredMovies} />
+      <MovieList
+        movies={filteredMovies}
+        favouriteMovieIds={favouriteMovieIds}
+        addFavouriteMovie={addFavouriteMovie}
+      />
     </section>
   );
 };

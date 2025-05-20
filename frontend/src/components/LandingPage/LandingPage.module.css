@@ -7,23 +7,23 @@
   border-radius: 5px;
   border: 1px solid #ccc;
 }
-.movieList {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 1.5rem;
-}
 
 .movieCard {
+  min-width: 280px;
+  margin-left: 30px;
+  border-radius: 8px;
   background: #fff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   transition: transform 0.2s;
-  width: 300px;
-  padding: 1rem;
   text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.row {
+  display: flex;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
 
 .movieCard:hover {
@@ -140,4 +140,26 @@ strong {
   margin-left: 30px;
   margin-bottom: 20px;
   color: #fff;
+}
+
+.scrollContainer {
+  position: relative;
+}
+
+.scrollButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 2;
+}
+
+.heartButton {
+  position: relative;
+  z-index: 10;
 }
