@@ -9,7 +9,18 @@ const TopRatedMovies = ({ movies }) => {
 
   return (
     <section>
-      <h2>⭐ Top Rated Movies</h2>
+      <h2
+        style={{
+          color: "white",
+          textAlign: "left",
+          fontSize: "32px",
+          marginBottom: "20px",
+          marginTop: "10px",
+          marginLeft: "30px",
+        }}
+      >
+        ⭐ Top Rated Movies
+      </h2>
       <MovieList movies={filteredMovies} />
     </section>
   );

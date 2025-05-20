@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "./LandingPage.module.css";
 
 const LoginButton = ({ setUser }) => {
   // ✅ Accepts setUser for authentication
@@ -19,7 +20,6 @@ const LoginButton = ({ setUser }) => {
       const data = await response.json();
       if (response.ok) {
         console.log("Login successful:", data);
-
         setUser({ username: data.username }); // Store login state in React instead of sessionStorage
 
         navigate("/"); // Redirect to landing page
@@ -32,11 +32,11 @@ const LoginButton = ({ setUser }) => {
   };
 
   return (
-    <div className="loginBtn">
+    <div className={styles.loginBtn}>
       {!showLogin ? (
         <button onClick={() => setShowLogin(true)}>Login</button>
       ) : (
-        <div className="loginForm">
+        <div className={styles.loginForm}>
           <h3>Login</h3>
           <input
             type="text"

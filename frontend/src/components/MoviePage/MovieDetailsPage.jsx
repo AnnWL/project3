@@ -102,12 +102,17 @@ const MovieDetailsPage = () => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
-        {/* <img
-          src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-          alt={movie.title}
-        /> */}
-        <div className="modal-text">
+      <div className={styles.modalContent}>
+        {movie ? (
+          <img
+            src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+            alt={movie.title}
+          />
+        ) : (
+          <p>Loading movie poster...</p>
+        )}
+
+        <div className={styles.modalText}>
           {movie ? (
             <>
               <h2>{movie.title}</h2>
@@ -119,38 +124,20 @@ const MovieDetailsPage = () => {
             <p>Loading movie details...</p>
           )}
 
-          {movie?.belongs_to_collection?.length > 0 ? (
+          {movie?.genres?.length > 0 ? (
             <p>
               <strong>Genres:</strong>{" "}
-              {movie.belongs_to_collection
-                .map((genre) => genre.name)
-                .join(", ")}
+              {movie.genres.map((genre) => genre.name).join(", ")}
             </p>
           ) : (
             <p>No genre information available.</p>
           )}
-          {cast.length > 0 ? (
-            <>
-              <h3>Main Cast:</h3>
-              <ul>
-                {cast.map((actor) => (
-                  <li key={actor.id}>
-                    {actor.original_name} as {actor.character}
-                  </li>
-                ))}
-              </ul>
-            </>
-          ) : (
-            <p>No cast information available.</p>
-          )}
-
           {/* Back to Home link */}
           <div style={{ textAlign: "center", marginTop: "2rem" }}>
             <Link to="/" className={styles.backLink}>
-              ← Back to Home
+              <strong>← Back to Home</strong>
             </Link>
           </div>
-
           <h3>Reviews:</h3>
           <ul>
             {reviews.length > 0 ? (
@@ -171,6 +158,7 @@ const MovieDetailsPage = () => {
         </div>
       </div>
 
+      <br />
       {showReviewPopup && (
         <div className="popup-overlay">
           <div className="popup-content">

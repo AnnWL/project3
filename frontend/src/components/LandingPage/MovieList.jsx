@@ -11,24 +11,21 @@ const MovieList = ({ movies }) => {
         <div key={movie._id} className={styles.movieCard}>
           {movie.poster_path && (
             <img
-              src={movie.poster_path}
-              alt={`${movie.title} poster`}
+              src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+              alt={movie.title}
               className={styles.poster}
             />
           )}
           <div className={styles.cardContent}>
             <h3 className={styles.title}>{movie.title}</h3>
-            <p className={styles.description}>
-              {movie.description?.slice(0, 100)}
-            </p>
             <p className={styles.genre}>
               <strong>Genre:</strong>{" "}
-              {Array.isArray(movie.genre)
-                ? movie.genre.join(", ")
-                : movie.genre || "N/A"}
+              {Array.isArray(movie?.genres)
+                ? movie.genres.map((item) => item.name).join(", ")
+                : genres || "N/A"}
             </p>
             <p className={styles.rating}>
-              <strong>Rating:</strong> {movie.vote_average || "N/A"}
+              <strong>Rating:</strong> {movie.vote_average?.toFixed(1) || "N/A"}
             </p>
             {movie?._id ? (
               <Link to={`/movies/${movie._id}`} className={styles.readMore}>

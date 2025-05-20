@@ -27,6 +27,7 @@ const ActorPage = () => {
     if (gender === 2) return "Male";
     return "Other";
   };
+
   return (
     <div className={styles.actorPage}>
       <div className={styles.actorHeader}>

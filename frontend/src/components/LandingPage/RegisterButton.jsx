@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styles from "./LandingPage.module.css";
 
-const RegisterButton = ({ setUser }) => { // ✅ Accepts setUser for authentication
+const RegisterButton = ({ setUser }) => {
+  // ✅ Accepts setUser for authentication
   const navigate = useNavigate();
   const [showRegister, setShowRegister] = useState(false);
   const [email, setEmail] = useState("");
@@ -29,7 +31,9 @@ const RegisterButton = ({ setUser }) => { // ✅ Accepts setUser for authenticat
         if (Array.isArray(data)) {
           setErrorMessage(data.map((err) => err.msg).join(", ")); // ✅ Extract messages from validation errors
         } else {
-          setErrorMessage(data.msg || "Registration failed. Please check your details.");
+          setErrorMessage(
+            data.msg || "Registration failed. Please check your details."
+          );
         }
       }
     } catch (error) {
@@ -39,7 +43,7 @@ const RegisterButton = ({ setUser }) => { // ✅ Accepts setUser for authenticat
   };
 
   return (
-    <div className="registerBtn">
+    <div className={styles.registerBtn}>
       {!showRegister ? (
         <button onClick={() => setShowRegister(true)}>Register</button>
       ) : (

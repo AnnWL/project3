@@ -10,6 +10,8 @@
 .movieList {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
   gap: 1.5rem;
 }
 
@@ -64,4 +66,78 @@ strong {
 .readMore:hover {
   color: #005fa3;
   text-decoration: underline;
+}
+
+.registerBtn {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10px;
+}
+
+.loginBtn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 5px;
+}
+
+.loginForm {
+  font-size: 48px;
+}
+
+.movieTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  color: #fff;
+}
+
+.landingPage {
+  background-color: #476d9e;
+}
+
+.title {
+  font-size: 20px;
+}
+
+.searchRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.searchRow label {
+  padding-left: 90px;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.movieApp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.leftSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.welcome {
+  text-align: left;
+  margin-top: 10px;
+  margin-left: 30px;
+}
+
+.sectionTitle {
+  margin-left: 30px;
+  margin-bottom: 20px;
+  color: #fff;
 }

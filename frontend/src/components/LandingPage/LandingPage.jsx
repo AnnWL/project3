@@ -22,7 +22,7 @@ const LandingPage = ({ user, setUser }) => {
 
   // // Fetch user data after login
   // useEffect(() => {
-  //   const fetchUserData = async () => {
+  // const fetchUserData = async () => {
   //     const token = sessionStorage.getItem("token");
 
   //     console.log("Stored Token Before Request:", token); // Debugging token existence
@@ -130,49 +130,60 @@ const LandingPage = ({ user, setUser }) => {
 
   return (
     <div className={styles.landingPage}>
-      <h1>🎬 Movie App</h1>
-      {user ? (
-        <>
-          <h2>Welcome!l</h2>
-        </>
-      ) : (
-        <>
-          <LoginButton setUser={setUser} /> {/* ✅ Pass setUser */}
-          <RegisterButton setUser={setUser} />
-        </>
-      )}
+      <div className={styles.movieTitle}>
+        <div className={styles.leftSection}>
+          <h1>🎬 Movie App</h1>
+          {user && <h2 className={styles.welcome}>Welcome!</h2>}
+        </div>
+        {!user && (
+          <div className={styles.buttonGroup}>
+            <LoginButton setUser={setUser} /> {/* ✅ Pass setUser */}
+            <RegisterButton setUser={setUser} />
+          </div>
+        )}
+      </div>
 
-      <label>
-        Search for:{" "}
-        <select
-          value={searchType}
-          onChange={(e) => {
-            setSearchType(e.target.value);
-            setSearchTerm("");
-            setMovies([]);
-            setActors([]);
-            setGenreFilter("");
-          }}
-        >
-          <option value="movies">Movies</option>
-          <option value="actors">Actors</option>
-        </select>
-      </label>
+      <div className={styles.searchRow}>
+        <label>
+          Search for:{" "}
+          <select
+            value={searchType}
+            onChange={(e) => {
+              setSearchType(e.target.value);
+              setSearchTerm("");
+              setMovies([]);
+              setActors([]);
+              setGenreFilter("");
+            }}
+          >
+            <option value="movies">Movies</option>
+            <option value="actors">Actors</option>
+          </select>
+        </label>
 
-      <SearchBar onSearch={setSearchTerm} />
+        <SearchBar onSearch={setSearchTerm} />
+      </div>
 
       {searchType === "movies" && (
-        <select
-          value={genreFilter}
-          onChange={(e) => setGenreFilter(e.target.value)}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "left",
+            marginLeft: "38px",
+          }}
         >
-          <option value="">All Genres</option>
-          {genres.map((g) => (
-            <option key={g} value={g}>
-              {g}
-            </option>
-          ))}
-        </select>
+          <select
+            value={genreFilter}
+            onChange={(e) => setGenreFilter(e.target.value)}
+          >
+            <option value="">All Genres</option>
+            {genres.map((g) => (
+              <option key={g} value={g}>
+                {g}
+              </option>
+            ))}
+          </select>
+        </div>
       )}
 
       {searchTerm.trim() ? (
