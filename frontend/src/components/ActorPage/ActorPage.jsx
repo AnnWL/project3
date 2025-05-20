@@ -22,7 +22,11 @@ const ActorPage = () => {
   }, [id]);
 
   if (!actor) return <p>Loading actor details...</p>;
-
+  const getGenderLabel = (gender) => {
+    if (gender === 1) return "Female";
+    if (gender === 2) return "Male";
+    return "Other";
+  };
   return (
     <div className={styles.actorPage}>
       <div className={styles.actorHeader}>
@@ -37,7 +41,7 @@ const ActorPage = () => {
         <div className={styles.actorDetails}>
           <h1>{actor.name}</h1>
           <p>
-            <strong>Gender:</strong> {actor.gender || "N/A"}
+            <strong>Gender:</strong> {getGenderLabel(actor.gender)}
           </p>
           <p>
             <strong>Birthday:</strong>{" "}
