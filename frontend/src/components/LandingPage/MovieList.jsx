@@ -30,9 +30,13 @@ const MovieList = ({ movies }) => {
             <p className={styles.rating}>
               <strong>Rating:</strong> {movie.vote_average || "N/A"}
             </p>
-            <Link to={`/movies/${movie._id}`} className={styles.readMore}>
-              Read more →
-            </Link>
+            {movie?._id ? (
+              <Link to={`/movies/${movie._id}`} className={styles.readMore}>
+                Read more →
+              </Link>
+            ) : (
+              <p style={{ color: "red" }}>Movie ID missing!</p>
+            )}
           </div>
         </div>
       ))}

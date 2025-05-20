@@ -1,7 +1,9 @@
 import React, { use, useEffect, useState } from "react";
 import styles from "./MoviePage.module.css";
+import { useParams, Link } from "react-router-dom";
 
-const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
+const MovieDetailsPage = () => {
+  const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [showReviewPopup, setShowReviewPopup] = useState(false);
   const [reviews, setReviews] = useState([]);
@@ -12,29 +14,28 @@ const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
   useEffect(() => {
     const fetchMovieData = async () => {
       try {
-        const response = await fetch(
-          `http://localhost:5001/api/movies/${movieId}`
-        );
+        const response = await fetch(`http://localhost:5001/api/movies/${id}`);
         if (!response.ok) throw new Error("Failed to fetch movie data");
 
         const data = await response.json();
-        setMovie(data);
+        console.log("Movie Data:", data);
+        setMovie(data.movie);
       } catch (err) {
         console.error("Error fetching movie data:", err);
         setError("Failed to load movie details. Please try again.");
       }
     };
 
-    if (movieId) {
+    if (id) {
       fetchMovieData();
     }
-  }, [movieId]);
+  }, [id]);
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/api/movies/${movieId}/reviews`
+          `http://localhost:5001/api/movies/${id}/reviews`
         );
         const data = await response.json();
         if (response.ok) {
@@ -47,13 +48,13 @@ const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
       }
     };
 
-    if (movieId) fetchReviews();
-  }, [movieId]);
+    if (id) fetchReviews();
+  }, [id]);
 
   const handleReviewSubmit = async () => {
     try {
       const response = await fetch(
-        `http://localhost:5001/api/movies/${movieId}/reviews`,
+        `http://localhost:5001/api/movies/${id}/reviews`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -76,18 +77,43 @@ const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <img
-          src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+        {/* <img
+          src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
           alt={movie.title}
-        />
+        /> */}
         <div className="modal-text">
-          <h2>{movie.title}</h2>
-          <p>{movie.overview}</p>
-          <p>
-            ⭐ Rating: {movie.vote_average.toFixed(1)} | 🕒 {movie.runtime} min{" "}
-          </p>
-          <p> Release Date: {movie.release_date}</p>
-          <h3>Main Cast:</h3>
+          {movie ? (
+            <>
+              <h2>{movie.title}</h2>
+              <p>{movie.overview}</p>
+              <p>
+                ⭐ Rating: {movie.vote_average?.toFixed(1)}
+                {/* | 🕒 {movie.runtime}{" "}
+                min */}
+              </p>
+              <p>Release Date: {movie.release_date}</p>
+            </>
+          ) : (
+            <p>Loading movie details...</p>
+          )}
+
+          {movie?.belongs_to_collection?.length > 0 ? (
+            <p>
+              <strong>Genres:</strong>{" "}
+              {movie.belongs_to_collection
+                .map((genre) => genre.name)
+                .join(", ")}
+            </p>
+          ) : (
+            <p>No genre information available.</p>
+          )}
+          {/* Back to Home link */}
+          <div style={{ textAlign: "center", marginTop: "2rem" }}>
+            <Link to="/" className={styles.backLink}>
+              ← Back to Home
+            </Link>
+          </div>
+          {/* <h3>Main Cast:</h3>
           <ul>
             {actors?.length > 0 ? (
               actors.map((actor) => (
@@ -100,7 +126,7 @@ const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
             ) : (
               <p>No cast information available.</p>
             )}
-          </ul>
+          </ul> */}
           <h3>Reviews:</h3>
           <ul>
             {reviews.length > 0 ? (
@@ -114,8 +140,7 @@ const MovieDetailsPage = ({ movieId, actors, onClose, onActorClick }) => {
               <p>No reviews yet. Be the first to review!</p>
             )}
           </ul>
-          <button onClick={onClose}>Close</button>
-
+          {/* <button onClick={onClose}>Close</button> */}
           <button onClick={() => setShowReviewPopup(true)}>
             Leave a review
           </button>

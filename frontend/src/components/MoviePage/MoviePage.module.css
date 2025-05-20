@@ -116,3 +116,13 @@ input {
   margin-top: 15px;
   width: 100%;
 }
+
+.backLink {
+  font-size: 1rem;
+  color: #0077cc;
+  text-decoration: none;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}
