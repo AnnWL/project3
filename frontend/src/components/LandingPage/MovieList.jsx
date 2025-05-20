@@ -32,15 +32,6 @@ const MovieList = ({ movies, favouriteMovieIds = [], addFavouriteMovie }) => {
                 className={styles.poster}
               />
             )}
-            <div className={styles.favourite}>
-              <FavouriteButton
-                isFavourite={favouriteMovieIds.includes(movie.ext_id)}
-                onClick={
-                  addFavouriteMovie ? () => addFavouriteMovie(movie) : null
-                }
-                disabled={!addFavouriteMovie}
-              />
-            </div>
 
             <div className={styles.cardContent}>
               <h3 className={styles.title}>{movie.title}</h3>
@@ -53,9 +44,22 @@ const MovieList = ({ movies, favouriteMovieIds = [], addFavouriteMovie }) => {
                 {movie.vote_average?.toFixed(1) || "N/A"}
               </p>
               {movie?._id ? (
-                <Link to={`/movies/${movie._id}`} className={styles.readMore}>
-                  Read more →
-                </Link>
+                <div>
+                  <Link to={`/movies/${movie._id}`} className={styles.readMore}>
+                    Read more →
+                  </Link>
+                  <div className={styles.favourite}>
+                    <FavouriteButton
+                      isFavourite={favouriteMovieIds.includes(movie.ext_id)}
+                      onClick={
+                        addFavouriteMovie
+                          ? () => addFavouriteMovie(movie)
+                          : null
+                      }
+                      disabled={!addFavouriteMovie}
+                    />
+                  </div>
+                </div>
               ) : (
                 <p style={{ color: "red" }}>Movie ID missing!</p>
               )}

@@ -158,3 +158,8 @@ strong {
   padding: 10px;
   z-index: 2;
 }
+
+.heartButton {
+  position: relative;
+  z-index: 10;
+}
