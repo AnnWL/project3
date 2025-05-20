@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const LoginButton = () => {
+const LoginButton = ({ setUser }) => {
+  // ✅ Accepts setUser for authentication
   const navigate = useNavigate();
   const [showLogin, setShowLogin] = useState(false);
   const [username, setUsername] = useState("");
@@ -18,13 +19,10 @@ const LoginButton = () => {
       const data = await response.json();
       if (response.ok) {
         console.log("Login successful:", data);
-        sessionStorage.setItem("token", data.token);
-      sessionStorage.setItem("username", data.username);
 
+        setUser({ username: data.username }); // Store login state in React instead of sessionStorage
 
-        // Redirect to landing page and trigger user data re-fetch
-        navigate("/");
-        window.location.reload(); // Forces re-fetch of user data
+        navigate("/"); // Redirect to landing page
       } else {
         console.error("Login failed:", data.msg);
       }
