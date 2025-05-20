@@ -70,7 +70,7 @@ export const updateReview = async (req, res) => {
     const { rating, comment } = req.body;
     // const userId = req.user.id;
 
-    const userId = req.user?.id || "68258a02ed49ee659574a8e0";
+    // const userId = req.user?.id || "68258a02ed49ee659574a8e0";
 
     const review = await ReviewModel.findById(reviewId).populate(
       "user",
@@ -111,7 +111,7 @@ export const deleteReview = async (req, res) => {
     const { reviewId } = req.params;
     // const userId = req.user.id;
 
-    const userId = req.user?.id || "68258a02ed49ee659574a8e0";
+    // const userId = req.user?.id || "68258a02ed49ee659574a8e0";
 
     const review = await ReviewModel.findById(reviewId).populate(
       "user",
