@@ -1,6 +1,7 @@
 import React, { use, useEffect, useState } from "react";
 import styles from "./MoviePage.module.css";
 import { useParams, Link } from "react-router-dom";
+import { format } from "date-fns";
 
 const MovieDetailsPage = ({ user }) => {
   const { id } = useParams();
@@ -65,7 +66,7 @@ const MovieDetailsPage = ({ user }) => {
           data.cast.map((actor) => ({
             original_name: actor.original_name,
             character: actor.character,
-            id: actor.id,
+            id: actor.ext_id,
           }))
         );
       } catch (error) {
@@ -121,16 +122,21 @@ const MovieDetailsPage = ({ user }) => {
               <h2>{movie.title}</h2>
               <p>{movie.description}</p>
               <p>⭐ Rating: {movie.vote_average?.toFixed(1)}</p>
-              <p>Release Date: {movie.release_date}</p>
+              <p>
+                Release Date:{" "}
+                {format(new Date(movie.releaseDate), "MMMM d, yyyy")}
+              </p>
             </>
           ) : (
             <p>Loading movie details...</p>
           )}
 
-          {movie?.genre?.length > 0 ? (
+          {movie?.genre && movie.genre.length > 0 ? (
             <p>
               <strong>Genres:</strong>{" "}
-              {movie.genre.map((genre) => genre.name).join(", ")}
+              {Array.isArray(movie.genre)
+                ? movie.genre.join(", ")
+                : movie.genre}
             </p>
           ) : (
             <p>No genre information available.</p>
