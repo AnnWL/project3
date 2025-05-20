@@ -4,25 +4,11 @@ import styles from "./LandingPage.module.css";
 import FavouriteButton from "./FavouriteButton.jsx";
 
 const MovieList = ({ movies, favouriteMovieIds = [], addFavouriteMovie }) => {
-  const scrollRef = useRef();
-
-  const scrollLeft = () => {
-    scrollRef.current.scrollLeft -= 300;
-  };
-
-  const scrollRight = () => {
-    scrollRef.current.scrollLeft += 300;
-  };
-
   if (!movies.length) return <p>No movies found.</p>;
 
   return (
-    <div className={styles.scrollContainer}>
-      <button className={styles.scrollButton} onClick={scrollLeft}>
-        ◀
-      </button>
-
-      <div className={styles.movieList} ref={scrollRef}>
+    <div className={styles.movieList}>
+      <div className={styles.row}>
         {movies.map((movie) => (
           <div key={movie._id} className={styles.movieCard}>
             {movie.poster_path && (
@@ -67,10 +53,6 @@ const MovieList = ({ movies, favouriteMovieIds = [], addFavouriteMovie }) => {
           </div>
         ))}
       </div>
-
-      <button className={styles.scrollButton} onClick={scrollRight}>
-        ▶
-      </button>
     </div>
   );
 };
