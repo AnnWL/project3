@@ -1,6 +1,7 @@
 import React, { use, useEffect, useState } from "react";
 import styles from "./MoviePage.module.css";
 import { useParams, Link } from "react-router-dom";
+import { format } from "date-fns";
 
 const MovieDetailsPage = ({ user }) => {
   const { id } = useParams();
