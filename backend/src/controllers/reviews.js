@@ -26,9 +26,7 @@ export const createReview = async (req, res) => {
   try {
     const { rating, comment } = req.body;
     const movieId = req.params.movieId;
-    // const userId = req.user.id; // need to have `req.user` from auth middleware
-
-    const userId = req.user?.id || "68258a02ed49ee659574a8e0";
+    const userId = req.user.id; // need to have `req.user` from auth middleware
 
     // Check if review by user for movie exists
     const existing = await ReviewModel.findOne({
@@ -70,9 +68,7 @@ export const updateReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
     const { rating, comment } = req.body;
-    // const userId = req.user.id;
-
-    const userId = req.user?.id || "68258a02ed49ee659574a8e0";
+    const userId = req.user.id;
 
     const review = await ReviewModel.findById(reviewId);
     if (!review) return handleNotFound(res, "Review", reviewId);
@@ -106,9 +102,7 @@ export const updateReview = async (req, res) => {
 export const deleteReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
-    // const userId = req.user.id;
-
-    const userId = req.user?.id || "68258a02ed49ee659574a8e0";
+    const userId = req.user.id;
 
     const review = await ReviewModel.findById(reviewId);
     if (!review) return handleNotFound(res, "Review", reviewId);

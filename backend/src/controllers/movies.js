@@ -93,21 +93,22 @@ export const getMovieById = async (req, res) => {
 // Get movie cast
 export const getMovieCast = async (req, res) => {
   try {
-    const movie = await MovieModel.findById(req.params.movieId);
-    if (!movie) return handleNotFound(res, "Movie", req.params.movieId);
+    console.log("Received extId param:", req.params.extId);
+    const extId = parseInt(req.params.extId);
+    console.log("Parsed extId:", extId);
 
-    const cast = await CastModel.find({ movie: movie._id }).populate("actor");
+    const castDoc = await CastModel.findOne({ ext_id: extId });
 
-    return res.status(200).json({
-      status: "ok",
-      msg: `Cast for movie ${req.params.movieId} retrieved`,
-      cast,
-    });
+    if (!castDoc) {
+      return res.status(404).json({ message: "Cast not found" });
+    }
+
+    res.json({ cast: castDoc.cast });
   } catch (error) {
     console.error(error.message);
     return res.status(400).json({
       status: "error",
-      msg: `Error getting cast for movie ${req.params.movieId}`,
+      msg: `Error getting cast for movie ${req.params.extId}`,
     });
   }
 };
