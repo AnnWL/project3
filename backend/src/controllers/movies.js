@@ -115,11 +115,20 @@ export const getMovieCast = async (req, res) => {
 // Get all unique genres from movies
 export const getGenres = async (req, res) => {
   try {
-    const genres = await MovieModel.distinct("genre");
-    // genres might be an array like ['Action', 'Drama', 'Comedy', ...]
+    const movies = await MovieModel.find({}, { genre: 1 }); // get only genre field
+
+    // Flatten all genres and extract names
+    const allGenreNames = movies
+      .flatMap((movie) => movie.genre || [])
+      .map((g) => g.name)
+      .filter(Boolean); // remove null/undefined
+
+    // Remove duplicates
+    const uniqueGenreNames = [...new Set(allGenreNames)].sort();
+
     return res.status(200).json({
       status: "ok",
-      genres,
+      genres: uniqueGenreNames,
     });
   } catch (error) {
     console.error(error);
