@@ -24,8 +24,9 @@ const RegisterButton = ({ setUser }) => {
         console.log("Registration successful:", data);
 
         setUser({ username: data.username }); // ✅ Store login state in React instead of sessionStorage
-
-        navigate("/"); // ✅ Redirect to landing page
+        window.alert("Registration successful. Please proceed to login.");
+        window.location.reload();
+        // navigate("/"); // ✅ Redirect to landing page
       } else {
         // Ensure validation errors are handled correctly
         if (Array.isArray(data)) {
