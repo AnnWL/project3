@@ -39,6 +39,7 @@ const createActors = async () => {
       nationality: "Australian",
       biography:
         "Samuel Henry John Worthington is an Australian actor renowned for his role as Jake Sully in the Avatar franchise (2009–present)...",
+      gender: 2,
       profile_path: "/6SGb5R9wmbQNpQIzuNcL5dCCAcq.jpg",
       popularity: 37.231,
     },
@@ -50,6 +51,7 @@ const createActors = async () => {
       nationality: "American",
       biography:
         "Zoë Yadira Saldaña-Perego is an American actress. She is best known for her roles in major film franchises...",
+      gender: 1,
       profile_path: "/iOVbUH20il632nj2v01NCtYYeSg.jpg",
       popularity: 51.191,
     },
@@ -72,6 +74,7 @@ const createActors = async () => {
       nationality: "American",
       biography:
         "Stephen Lang is an American actor and playwright. He is known for roles in films such as Avatar (2009)...",
+      gender: 2,
       profile_path: "/vAzlR5nPuCXUxfj4Wr3Ay3epYGR.jpg",
       popularity: 31.579,
     },
@@ -83,6 +86,7 @@ const createActors = async () => {
       nationality: "American",
       biography:
         "Johnny Depp is an American actor, producer, and musician. He began his career in television before gaining fame...",
+      gender: 1,
       profile_path: "/3bOGNsHlrswhyW79uvIHH1V43JI.jpg",
       popularity: 42.317,
     },
@@ -151,7 +155,12 @@ const createMovies = async () => {
       popularity: 150.437577,
       vote_average: 7.2,
       vote_count: 11800,
-      genre: ["Action", "Adventure", "Fantasy", "Science Fiction"],
+      genre: [
+        {
+          id: 37,
+          name: "Western",
+        },
+      ],
       keywords: ["pandora", "marine", "avatar", "alien", "space"],
       cast: [
         { actor_ext_id: 65731, character: "Jake Sully" },
@@ -174,7 +183,16 @@ const createMovies = async () => {
       popularity: 100.125,
       vote_average: 7.9,
       vote_count: 11000,
-      genre: ["Action", "Adventure", "Fantasy"],
+      genre: [
+        {
+          id: 37,
+          name: "Western",
+        },
+        {
+          id: 27,
+          name: "Horror",
+        },
+      ],
       keywords: ["pirates", "curse", "black pearl", "pirate ship", "treasure"],
       cast: [
         { actor_ext_id: 2231, character: "Jack Sparrow" },

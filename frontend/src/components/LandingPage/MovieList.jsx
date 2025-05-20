@@ -20,9 +20,9 @@ const MovieList = ({ movies }) => {
             <h3 className={styles.title}>{movie.title}</h3>
             <p className={styles.genre}>
               <strong>Genre:</strong>{" "}
-              {Array.isArray(movie?.genres)
-                ? movie.genres.map((item) => item.name).join(", ")
-                : genres || "N/A"}
+              {Array.isArray(movie?.genre)
+                ? movie.genre.map((item) => item.name).join(", ")
+                : genre || "N/A"}
             </p>
             <p className={styles.rating}>
               <strong>Rating:</strong> {movie.vote_average?.toFixed(1) || "N/A"}
