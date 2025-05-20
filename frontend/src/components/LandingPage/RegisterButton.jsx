@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const RegisterButton = () => {
+const RegisterButton = ({ setUser }) => { // ✅ Accepts setUser for authentication
   const navigate = useNavigate();
   const [showRegister, setShowRegister] = useState(false);
   const [email, setEmail] = useState("");
@@ -20,18 +20,16 @@ const RegisterButton = () => {
       const data = await response.json();
       if (response.ok) {
         console.log("Registration successful:", data);
-        sessionStorage.setItem("token", data.token);
-        sessionStorage.setItem("username", data.username);
-        navigate("/");
-        window.location.reload();
+
+        setUser({ username: data.username }); // ✅ Store login state in React instead of sessionStorage
+
+        navigate("/"); // ✅ Redirect to landing page
       } else {
         // Ensure validation errors are handled correctly
         if (Array.isArray(data)) {
-          setErrorMessage(data.map((err) => err.msg).join(", ")); // Extract msg from each validation error
+          setErrorMessage(data.map((err) => err.msg).join(", ")); // ✅ Extract messages from validation errors
         } else {
-          setErrorMessage(
-            data.msg || "Registration failed. Please check your details."
-          );
+          setErrorMessage(data.msg || "Registration failed. Please check your details.");
         }
       }
     } catch (error) {

@@ -7,7 +7,7 @@ import TopRatedMovies from "./TopRatedMovies";
 import styles from "./LandingPage.module.css";
 import RegisterButton from "./RegisterButton";
 
-const LandingPage = () => {
+const LandingPage = ({ user, setUser }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("movies");
   const [genreFilter, setGenreFilter] = useState("");
@@ -18,27 +18,44 @@ const LandingPage = () => {
   const [error, setError] = useState(null);
   const [userData, setUserData] = useState(null);
 
-  const username = sessionStorage.getItem("username");
+  // const username = sessionStorage.getItem("username");
 
-  // Fetch user data after login
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch(`/api/users/profile`, {
-          headers: {
-            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-          }, //after login, token is stored locally in browser
-        });
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.msg);
-        setUserData(data);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
+  // // Fetch user data after login
+  // useEffect(() => {
+  //   const fetchUserData = async () => {
+  //     const token = sessionStorage.getItem("token");
 
-    if (sessionStorage.getItem("token")) fetchUserData();
-  }, []);
+  //     console.log("Stored Token Before Request:", token); // Debugging token existence
+
+  //     if (!token) {
+  //       console.error("No authentication token found.");
+  //       return;
+  //     }
+
+  //     try {
+  //       const response = await fetch(`/api/users/profile`, {
+  //         headers: {
+  //           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+  //         }, // Using sessionStorage
+  //       });
+
+  //       console.log("Fetch User Response:", response); // Debugging API response
+
+  //       if (!response.ok) {
+  //         throw new Error(
+  //           `HTTP Error ${response.status}: ${await response.text()}`
+  //         );
+  //       }
+
+  //       const data = await response.json();
+  //       setUserData(data);
+  //     } catch (error) {
+  //       console.error("Error fetching user data:", error);
+  //     }
+  //   };
+
+  //   if (sessionStorage.getItem("token")) fetchUserData();
+  // }, []);
 
   // Fetch all movies initially for top rated section
   useEffect(() => {
@@ -114,39 +131,14 @@ const LandingPage = () => {
   return (
     <div className={styles.landingPage}>
       <h1>🎬 Movie App</h1>
-      {username ? (
-        <h2>Welcome!</h2>
+      {user ? (
+        <>
+          <h2>Welcome!l</h2>
+        </>
       ) : (
         <>
-          <LoginButton />
-          <RegisterButton /> {/* Add register button here */}
-        </>
-      )}
-
-      <br />
-      {userData && (
-        <>
-          <h2>Your Favorites</h2>
-          <ul>
-            {userData.favorites.length > 0 ? (
-              userData.favorites.map((movie) => (
-                <li key={movie._id}>{movie.title}</li>
-              ))
-            ) : (
-              <p>No favorite movies yet.</p>
-            )}
-          </ul>
-
-          <h2>Watchlist</h2>
-          <ul>
-            {userData.toWatch.length > 0 ? (
-              userData.toWatch.map((movie) => (
-                <li key={movie._id}>{movie.title}</li>
-              ))
-            ) : (
-              <p>Your watchlist is empty.</p>
-            )}
-          </ul>
+          <LoginButton setUser={setUser} /> {/* ✅ Pass setUser */}
+          <RegisterButton setUser={setUser} />
         </>
       )}
 
