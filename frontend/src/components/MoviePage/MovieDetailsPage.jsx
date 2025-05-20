@@ -219,10 +219,7 @@ const MovieDetailsPage = ({ user }) => {
               <h2>{movie.title}</h2>
               <p>{movie.description}</p>
               <p>⭐ Rating: {movie.vote_average?.toFixed(1)}</p>
-              <p>
-                Release Date:{" "}
-                {format(new Date(movie.releaseDate), "MMMM d, yyyy")}
-              </p>
+              <p>Release Date: {movie.release_date}</p>
             </>
           ) : (
             <p>Loading movie details...</p>
