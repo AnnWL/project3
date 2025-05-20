@@ -13,12 +13,7 @@ const movieSchema = new mongoose.Schema(
     popularity: { type: Number },
     vote_average: { type: Number },
     vote_count: { type: Number },
-    genre: [
-      {
-        id: { type: Number },
-        name: { type: String },
-      },
-    ],
+    genre: { type: [String] },
     keywords: { type: [String] },
   },
   { timestamps: true, collection: "movie" }

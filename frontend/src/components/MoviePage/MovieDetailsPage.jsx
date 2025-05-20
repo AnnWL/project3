@@ -116,7 +116,7 @@ const MovieDetailsPage = () => {
           {movie ? (
             <>
               <h2>{movie.title}</h2>
-              <p>{movie.overview}</p>
+              <p>{movie.description}</p>
               <p>⭐ Rating: {movie.vote_average?.toFixed(1)}</p>
               <p>Release Date: {movie.release_date}</p>
             </>
@@ -124,10 +124,10 @@ const MovieDetailsPage = () => {
             <p>Loading movie details...</p>
           )}
 
-          {movie?.genres?.length > 0 ? (
+          {movie?.genre?.length > 0 ? (
             <p>
               <strong>Genres:</strong>{" "}
-              {movie.genres.map((genre) => genre.name).join(", ")}
+              {movie.genre.map((genre) => genre.name).join(", ")}
             </p>
           ) : (
             <p>No genre information available.</p>

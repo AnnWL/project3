@@ -17,6 +17,15 @@ const LandingPage = ({ user, setUser }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userData, setUserData] = useState(null);
+  const [favouriteMovieIds, setFavouriteMovieIds] = useState([]);
+
+  const addFavouriteMovie = (movie) => {
+    setFavouriteMovieIds((prev) =>
+      prev.includes(movie.ext_id)
+        ? prev.filter((id) => id !== movie.ext_id)
+        : [...prev, movie.ext_id]
+    );
+  };
 
   // const username = sessionStorage.getItem("username");
 
@@ -190,7 +199,11 @@ const LandingPage = ({ user, setUser }) => {
         <>
           <h2 className={styles.sectionTitle}>Search Results</h2>
           {searchType === "movies" ? (
-            <MovieList movies={movies} />
+            <MovieList
+              movies={movies}
+              favouriteMovieIds={favouriteMovieIds}
+              addFavouriteMovie={user ? addFavouriteMovie : null}
+            />
           ) : (
             <ActorList actors={actors} />
           )}
@@ -199,7 +212,13 @@ const LandingPage = ({ user, setUser }) => {
         <>
           {loading && <p>Loading movies...</p>}
           {error && <p className={styles.error}>Error: {error}</p>}
-          {!loading && !error && <TopRatedMovies movies={movies} />}
+          {!loading && !error && (
+            <TopRatedMovies
+              movies={movies}
+              favouriteMovieIds={favouriteMovieIds}
+              addFavouriteMovie={user ? addFavouriteMovie : null}
+            />
+          )}
         </>
       )}
     </div>

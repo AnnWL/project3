@@ -141,3 +141,20 @@ strong {
   margin-bottom: 20px;
   color: #fff;
 }
+
+.scrollContainer {
+  position: relative;
+}
+
+.scrollButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 2;
+}
