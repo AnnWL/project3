@@ -225,12 +225,12 @@ const MovieDetailsPage = ({ user }) => {
             <p>Loading movie details...</p>
           )}
 
-          {movie?.genres && movie.genres.length > 0 ? (
+          {movie?.genre && movie.genre.length > 0 ? (
             <p>
               <strong>Genres:</strong>{" "}
-              {Array.isArray(movie.genres)
-                ? movie.genres.map((genre) => genre.name).join(", ") // ✅ Extract names
-                : movie.genres}
+              {Array.isArray(movie.genre)
+                ? movie.genre.join(", ")
+                : movie.genre}
             </p>
           ) : (
             <p>No genre information available.</p>
