@@ -23,7 +23,9 @@ const MovieList = ({ movies, favouriteMovieIds = [], addFavouriteMovie }) => {
               <h3 className={styles.title}>{movie.title}</h3>
               <p className={styles.genre}>
                 <strong>Genre:</strong>{" "}
-                {Array.isArray(movie?.genre) ? movie.genre.join(", ") : "N/A"}
+                {Array.isArray(movie.genres)
+                  ? movie.genres.map((genre) => genre.name).join(", ") // ✅ Extracts names from objects
+                  : movie.genres}
               </p>
               <p className={styles.rating}>
                 <strong>Rating:</strong>{" "}
