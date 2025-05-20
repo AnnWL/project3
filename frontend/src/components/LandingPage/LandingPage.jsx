@@ -130,30 +130,24 @@ const LandingPage = ({ user, setUser }) => {
           </select>
         </label>
 
+        {searchType === "movies" && (
+          <div className={styles.genres}>
+            <select
+              value={genreFilter}
+              onChange={(e) => setGenreFilter(e.target.value)}
+            >
+              <option value="">All Genres</option>
+              {genres.map((g) => (
+                <option key={g} value={g}>
+                  {g}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+
         <SearchBar onSearch={setSearchTerm} />
       </div>
-
-      {searchType === "movies" && (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "left",
-            marginLeft: "38px",
-          }}
-        >
-          <select
-            value={genreFilter}
-            onChange={(e) => setGenreFilter(e.target.value)}
-          >
-            <option value="">All Genres</option>
-            {genres.map((g) => (
-              <option key={g} value={g}>
-                {g}
-              </option>
-            ))}
-          </select>
-        </div>
-      )}
 
       {searchTerm.trim() ? (
         <>
