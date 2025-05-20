@@ -24,3 +24,13 @@
 .knownFor {
   margin-top: 2rem;
 }
+
+.backLink {
+  font-size: 1rem;
+  color: #0077cc;
+  text-decoration: none;
+}
+
+.backLink:hover {
+  text-decoration: underline;
+}

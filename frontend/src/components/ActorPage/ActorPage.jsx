@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import styles from "./ActorPage.module.css";
 
 const ActorPage = () => {
@@ -53,9 +53,17 @@ const ActorPage = () => {
           </p>
         </div>
       </div>
+
       <div className={styles.actorBio}>
         <h2>Biography</h2>
         <p>{actor.biography || "No biography available."}</p>
+      </div>
+
+      {/* Back to Home link */}
+      <div style={{ textAlign: "center", marginTop: "2rem" }}>
+        <Link to="/" className={styles.backLink}>
+          ← Back to Home
+        </Link>
       </div>
     </div>
   );

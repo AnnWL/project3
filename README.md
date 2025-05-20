@@ -63,8 +63,6 @@ REFRESH_SECRET=your_refresh_token_secret
 
 ---
 
----
-
 ## 🧩 Data Schema Overview
 
 This schema supports key features such as reviews, watchlists, user favorites, cast details, and TMDB data integration.
