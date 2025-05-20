@@ -67,4 +67,4 @@ REFRESH_SECRET=your_refresh_token_secret
 
 This schema supports key features such as reviews, watchlists, user favorites, cast details, and TMDB data integration.
 
-![Data Schema](./movies_app.png)
+![Data Schema](./documentation/movies_app.png)
