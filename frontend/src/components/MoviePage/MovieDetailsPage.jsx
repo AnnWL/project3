@@ -180,10 +180,10 @@ const MovieDetailsPage = () => {
               value={review}
               onChange={(e) => setReview(e.target.value)}
             />
-            <label>Rating (0-10):</label>
+            <label>Rating (1-10):</label>
             <input
               type="number"
-              min="0"
+              min="1"
               max="10"
               value={rating}
               onChange={(e) => setRating(e.target.value)}
