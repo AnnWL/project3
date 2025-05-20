@@ -18,46 +18,6 @@ const LandingPage = ({ user, setUser }) => {
   const [error, setError] = useState(null);
   const [userData, setUserData] = useState(null);
 
-  // const username = sessionStorage.getItem("username");
-
-  // // Fetch user data after login
-  // useEffect(() => {
-  // const fetchUserData = async () => {
-  //     const token = sessionStorage.getItem("token");
-
-  //     console.log("Stored Token Before Request:", token); // Debugging token existence
-
-  //     if (!token) {
-  //       console.error("No authentication token found.");
-  //       return;
-  //     }
-
-  //     try {
-  //       const response = await fetch(`/api/users/profile`, {
-  //         headers: {
-  //           Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-  //         }, // Using sessionStorage
-  //       });
-
-  //       console.log("Fetch User Response:", response); // Debugging API response
-
-  //       if (!response.ok) {
-  //         throw new Error(
-  //           `HTTP Error ${response.status}: ${await response.text()}`
-  //         );
-  //       }
-
-  //       const data = await response.json();
-  //       setUserData(data);
-  //     } catch (error) {
-  //       console.error("Error fetching user data:", error);
-  //     }
-  //   };
-
-  //   if (sessionStorage.getItem("token")) fetchUserData();
-  // }, []);
-
-  // Fetch all movies initially for top rated section
   useEffect(() => {
     const fetchAllMovies = async () => {
       try {

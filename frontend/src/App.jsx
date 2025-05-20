@@ -11,7 +11,7 @@ const App = () => {
     <Routes>
       <Route path="/" element={<LandingPage user={user} setUser={setUser} />} />
       <Route path="/actors/:id" element={<ActorPage />} />
-      <Route path="/movies/:id" element={<MovieDetailsPage />} />
+      <Route path="/movies/:id" element={<MovieDetailsPage user={user} />} />
     </Routes>
   );
 };

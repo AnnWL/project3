@@ -2,7 +2,7 @@ import React, { use, useEffect, useState } from "react";
 import styles from "./MoviePage.module.css";
 import { useParams, Link } from "react-router-dom";
 
-const MovieDetailsPage = () => {
+const MovieDetailsPage = ({ user }) => {
   const { id } = useParams();
   const [movie, setMovie] = useState(null);
   const [showReviewPopup, setShowReviewPopup] = useState(false);
@@ -36,7 +36,7 @@ const MovieDetailsPage = () => {
     const fetchReviews = async () => {
       try {
         const response = await fetch(
-          `http://localhost:5001/api/movies/${id}/reviews`
+          `http://localhost:5001/api/review/${id}/reviews`
         );
         const data = await response.json();
         if (response.ok) {
@@ -78,9 +78,14 @@ const MovieDetailsPage = () => {
   }, [id]);
 
   const handleReviewSubmit = async () => {
+    if (!user) {
+      alert("You must be logged in to submit a review.");
+      return;
+    }
+
     try {
       const response = await fetch(
-        `http://localhost:5001/api/movies/${id}/reviews`,
+        `http://localhost:5001/api/review/${id}/reviews`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -91,6 +96,8 @@ const MovieDetailsPage = () => {
       const data = await response.json();
       if (response.ok) {
         console.log("Review added:", data);
+        // ✅ Update reviews state immediately
+        setReviews((prevReviews) => [...prevReviews, data.newReview]);
         setShowReviewPopup(false);
       } else {
         console.error("Review submission failed:", data.msg);
@@ -132,29 +139,55 @@ const MovieDetailsPage = () => {
           ) : (
             <p>No genre information available.</p>
           )}
+
+          {/* ✅ Display cast list */}
+          <h3>Cast:</h3>
+          {movie?.cast?.length > 0 ? (
+            <ul>
+              {cast.map((actor) => (
+                <li key={actor.id}>
+                  <strong>{actor.original_name}</strong> as {actor.character}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>Loading cast...</p>
+          )}
+
           {/* Back to Home link */}
           <div style={{ textAlign: "center", marginTop: "2rem" }}>
             <Link to="/" className={styles.backLink}>
               <strong>← Back to Home</strong>
             </Link>
           </div>
+
           <h3>Reviews:</h3>
           <ul>
             {reviews.length > 0 ? (
               reviews.map((review) => (
                 <li key={review._id}>
-                  <strong>{review.user.username}:</strong> {review.comment} (⭐{" "}
-                  {review.rating})
+                  <strong>{review.user?.username ?? "Anonymous"}:</strong>{" "}
+                  {review.comment} (⭐ {review.rating})
                 </li>
               ))
             ) : (
               <p>No reviews yet. Be the first to review!</p>
             )}
           </ul>
-          {/* <button onClick={onClose}>Close</button> */}
+
+          {/* ✅ Show review button only if user is logged in */}
+          {user ? (
+            <button onClick={() => setShowReviewPopup(true)}>
+              Leave a review
+            </button>
+          ) : (
+            <p>You must be logged in to leave a review.</p>
+          )}
+
+          {/* <button onClick={onClose}>Close</button>
           <button onClick={() => setShowReviewPopup(true)}>
             Leave a review
-          </button>
+          </button> */}
         </div>
       </div>
 
