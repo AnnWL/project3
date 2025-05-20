@@ -102,7 +102,7 @@ const LandingPage = ({ user, setUser }) => {
       <div className={styles.movieTitle}>
         <div className={styles.leftSection}>
           <h1>🎬 Movie App</h1>
-          {user && <h2 className={styles.welcome}>Welcome!</h2>}
+          {user && <h2 className={styles.welcome}>Welcome {user.username}!</h2>}
         </div>
         {!user && (
           <div className={styles.buttonGroup}>
