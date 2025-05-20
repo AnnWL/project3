@@ -32,24 +32,23 @@ const MovieDetailsPage = ({ user }) => {
     }
   }, [id]);
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:5001/api/review/${id}/reviews`
-        );
-        const data = await response.json();
-        if (response.ok) {
-          setReviews(data.reviews);
-        } else {
-          console.error("Failed to fetch reviews:", data.msg);
-        }
-      } catch (error) {
-        console.error("Error fetching reviews:", error);
-      }
-    };
+  const fetchReviews = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5001/api/review/${id}/reviews`
+      );
+      const data = await response.json();
 
-    if (id) fetchReviews();
+      console.log("Fetched Reviews Data:", JSON.stringify(data, null, 2));
+
+      setReviews(data.reviews || []);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (id) fetchReviews(); // ✅ Now fetchReviews is accessible
   }, [id]);
 
   useEffect(() => {
@@ -82,7 +81,6 @@ const MovieDetailsPage = ({ user }) => {
       alert("You must be logged in to submit a review.");
       return;
     }
-
     try {
       const response = await fetch(
         `http://localhost:5001/api/review/${id}/reviews`,
@@ -92,12 +90,10 @@ const MovieDetailsPage = ({ user }) => {
           body: JSON.stringify({ rating, comment: review }),
         }
       );
-
       const data = await response.json();
       if (response.ok) {
         console.log("Review added:", data);
-        // ✅ Update reviews state immediately
-        setReviews((prevReviews) => [...prevReviews, data.newReview]);
+        await fetchReviews(); // ✅ Call fetchReviews to update UI
         setShowReviewPopup(false);
       } else {
         console.error("Review submission failed:", data.msg);
@@ -142,7 +138,7 @@ const MovieDetailsPage = ({ user }) => {
 
           {/* ✅ Display cast list */}
           <h3>Cast:</h3>
-          {movie?.cast?.length > 0 ? (
+          {cast.length > 0 ? (
             <ul>
               {cast.map((actor) => (
                 <li key={actor.id}>
@@ -183,11 +179,6 @@ const MovieDetailsPage = ({ user }) => {
           ) : (
             <p>You must be logged in to leave a review.</p>
           )}
-
-          {/* <button onClick={onClose}>Close</button>
-          <button onClick={() => setShowReviewPopup(true)}>
-            Leave a review
-          </button> */}
         </div>
       </div>
 
