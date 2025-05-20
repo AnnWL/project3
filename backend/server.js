@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
+console.log("MongoDB URI:", process.env.DATABASE);
+
 import express from "express";
 
 import authRouter from "./src/routers/authRouter.js";

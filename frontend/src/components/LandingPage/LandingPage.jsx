@@ -5,6 +5,7 @@ import ActorList from "./ActorList";
 import LoginButton from "./LoginButton";
 import TopRatedMovies from "./TopRatedMovies";
 import styles from "./LandingPage.module.css";
+import RegisterButton from "./RegisterButton";
 
 const LandingPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -17,12 +18,16 @@ const LandingPage = () => {
   const [error, setError] = useState(null);
   const [userData, setUserData] = useState(null);
 
+  const username = sessionStorage.getItem("username");
+
   // Fetch user data after login
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await fetch(`/api/users/profile`, {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }, //after login, token is stored locally in browser
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          }, //after login, token is stored locally in browser
         });
         const data = await response.json();
         if (!response.ok) throw new Error(data.msg);
@@ -32,8 +37,8 @@ const LandingPage = () => {
       }
     };
 
-    if (localStorage.getItem("token")) fetchUserData();
-  }, [localStorage.getItem("token")]);
+    if (sessionStorage.getItem("token")) fetchUserData();
+  }, []);
 
   // Fetch all movies initially for top rated section
   useEffect(() => {
@@ -109,7 +114,15 @@ const LandingPage = () => {
   return (
     <div className={styles.landingPage}>
       <h1>🎬 Movie App</h1>
-      <LoginButton />
+      {username ? (
+        <h2>Welcome!</h2>
+      ) : (
+        <>
+          <LoginButton />
+          <RegisterButton /> {/* Add register button here */}
+        </>
+      )}
+
       <br />
       {userData && (
         <>
