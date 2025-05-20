@@ -20,7 +20,12 @@ const LoginButton = ({ setUser }) => {
       const data = await response.json();
       if (response.ok) {
         console.log("Login successful:", data);
-        setUser({ username: data.username }); // Store login state in React instead of sessionStorage
+
+        setUser({
+          username: data.username,
+          token: data.access,
+          _id: data.id,
+        });
 
         navigate("/"); // Redirect to landing page
       } else {

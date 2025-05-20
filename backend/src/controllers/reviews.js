@@ -70,18 +70,20 @@ export const updateReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
     const { rating, comment } = req.body;
-    // const userId = req.user.id;
 
-    const userId = req.user?.id || "68258a02ed49ee659574a8e0";
-
-    const review = await ReviewModel.findById(reviewId);
+    const review = await ReviewModel.findById(reviewId).populate(
+      "user",
+      "username"
+    );
     if (!review) return handleNotFound(res, "Review", reviewId);
 
-    if (review.user.toString() !== userId) {
-      return res.status(403).json({
-        status: "error",
-        msg: "You are not authorized to update this review",
-      });
+    console.log("Authenticated User:", req.user.username);
+    console.log("Review Owner:", review.user.username);
+    if (req.user.username !== review.user.username) {
+      // ✅ Compare usernames
+      return res
+        .status(403)
+        .json({ msg: "You are not authorized to update this review" });
     }
 
     review.rating = rating ?? review.rating;
@@ -106,18 +108,18 @@ export const updateReview = async (req, res) => {
 export const deleteReview = async (req, res) => {
   try {
     const { reviewId } = req.params;
-    // const userId = req.user.id;
 
-    const userId = req.user?.id || "68258a02ed49ee659574a8e0";
-
-    const review = await ReviewModel.findById(reviewId);
+    const review = await ReviewModel.findById(reviewId).populate(
+      "user",
+      "username"
+    );
     if (!review) return handleNotFound(res, "Review", reviewId);
 
-    if (review.user.toString() !== userId) {
-      return res.status(403).json({
-        status: "error",
-        msg: "You are not authorized to delete this review",
-      });
+    if (req.user.username !== review.user.username) {
+      // ✅ Compare usernames
+      return res
+        .status(403)
+        .json({ msg: "You are not authorized to update this review" });
     }
 
     await review.deleteOne();

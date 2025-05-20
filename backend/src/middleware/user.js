@@ -25,7 +25,7 @@ export const authenticateUser = async (req, res, next) => {
         .json({ message: "User not found. Authentication failed." });
     }
 
-    req.user = user; // Attach full user object to request
+    req.user = { id: user._id, username: user.username };
     console.log("Authenticated User:", req.user); // Debugging
 
     next(); // Proceed to the next middleware/controller

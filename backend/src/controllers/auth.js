@@ -73,7 +73,12 @@ export const login = async (req, res, next) => {
     const accessToken = generateJwt(claims, process.env.ACCESS_SECRET, "20m");
     const refreshToken = generateJwt(claims, process.env.REFRESH_SECRET, "30d");
 
-    res.json({ access: accessToken, refresh: refreshToken });
+    res.json({
+      access: accessToken,
+      refresh: refreshToken,
+      username: user.username,
+      _id: user._id,
+    });
   } catch (error) {
     next(error); // Pass the error to the global error handler
   }
