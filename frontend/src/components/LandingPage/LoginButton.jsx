@@ -18,8 +18,13 @@ const LoginButton = () => {
       const data = await response.json();
       if (response.ok) {
         console.log("Login successful:", data);
-        localStorage.setItem("token", data.token); // Store JWT for authentication
-        navigate("/dashboard"); // Redirect on successful login
+        sessionStorage.setItem("token", data.token);
+      sessionStorage.setItem("username", data.username);
+
+
+        // Redirect to landing page and trigger user data re-fetch
+        navigate("/");
+        window.location.reload(); // Forces re-fetch of user data
       } else {
         console.error("Login failed:", data.msg);
       }

@@ -19,7 +19,7 @@ const MovieList = ({ movies }) => {
           <div className={styles.cardContent}>
             <h3 className={styles.title}>{movie.title}</h3>
             <p className={styles.description}>
-              {movie.description?.slice(0, 100)}...
+              {movie.description?.slice(0, 100)}
             </p>
             <p className={styles.genre}>
               <strong>Genre:</strong>{" "}
