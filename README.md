@@ -8,13 +8,47 @@ CineScope is a user-friendly movie search platform designed to help users explor
 
 ## Project Hierarchy
 
-- to be updated
+```
+Home
+│
+├── Search Results
+├── Router
+├── User
+│ └── Login / Register
+│
+├── Movie Details
+│ ├── Cast Section
+│ │ └── Actor Details
+│ ├── Reviews
+│ └── Post Rating
+
+```
+
+---
+
+## ✨ Features
+
+- 🔍 Movie Search: Search for movies by entering keywords
+
+- 🔐 User Authentication: Secure registration and login functionality
+
+- 🎬 Movie Details Page:
+
+  - Plot summary
+
+  - Cast list (clickable to view actor details)
+
+  - User ratings (view and submit)
+
+  - Reviews section (post and view comments)
+
+- 👤 Actor Details Page: Shows biography, birthday & others
 
 ---
 
 ## Attributions
 
-- [TMDB API](https://www.themoviedb.org/documentation/api) – for movie, cast, and crew data
+- [TMDB API](https://www.themoviedb.org/documentation/api) – for movies and cast data
 
 ---
 
