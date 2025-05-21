@@ -13,15 +13,6 @@ CineScope is a user-friendly movie search platform designed to help users explor
 ![Hierarchy Screenshot](./README-img/Picture3.jpg)
 ![Hierarchy Screenshot](./README-img/Picture4.jpg)
 ![Hierarchy Screenshot](./README-img/Picture5.jpg)
-![Hierarchy Screenshot](./README-img/Picture6.jpg)
-![Hierarchy Screenshot](./README-img/Picture7.jpg)
-![Hierarchy Screenshot](./README-img/Picture8.jpg)
-![Hierarchy Screenshot](./README-img/Picture9.jpg)
-![Hierarchy Screenshot](./README-img/Picture10.jpg)
-![Hierarchy Screenshot](./README-img/Picture11.jpg)
-![Hierarchy Screenshot](./README-img/Picture12.jpg)
-![Hierarchy Screenshot](./README-img/Picture13.jpg)
-![Hierarchy Screenshot](./README-img/Picture14.jpg)
 
 ---
 
