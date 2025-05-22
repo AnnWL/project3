@@ -8,11 +8,20 @@ CineScope is a user-friendly movie search platform designed to help users explor
 
 ## Project Hierarchy
 
-![Hierarchy Screenshot](./README-img/Picture1.jpg)
-![Hierarchy Screenshot](./README-img/Picture2.jpg)
-![Hierarchy Screenshot](./README-img/Picture3.jpg)
-![Hierarchy Screenshot](./README-img/Picture4.jpg)
-![Hierarchy Screenshot](./README-img/Picture5.jpg)
+```
+Home
+│
+├── Search Results
+├── Router
+├── User
+│ └── Login / Register
+│
+├── Movie Details
+│ ├── Cast Section
+│ │ └── Actor Details
+│ ├── Reviews
+│ └── Post Rating
+```
 
 ---
 
