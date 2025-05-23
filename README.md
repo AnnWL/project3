@@ -1,6 +1,7 @@
 # 🎬 CineScope – Your Personalized Movie Discovery Platform
 
-- insert screenshot
+![alt text](image.png)
+![alt text](image-1.png)
 
 CineScope is a user-friendly movie search platform designed to help users explore a rich collection of films from The Movie Database (TMDB). It enables user engagement through features like reviews, ratings, comments, and personalized watchlists. The app is focused exclusively on movies, ensuring tailored recommendations based on each user's favorites and watchlist history. Users can also discover trending and popular films, keeping them up to date with the latest in cinema.
 
